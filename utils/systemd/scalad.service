@@ -1,6 +1,6 @@
 [Unit]
 Description=Scala Full Node
-After=network.target
+After=network-online.target
 
 [Service]
 User=scala
