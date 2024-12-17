@@ -53,6 +53,13 @@
   #define MONERO_HOSTNAME_VERIFY boost::asio::ssl::rfc2818_verification
 #endif
 
+
+#if BOOST_VERSION >= 107300
+  #define MONERO_HOSTNAME_VERIFY boost::asio::ssl::host_name_verification
+#else
+  #define MONERO_HOSTNAME_VERIFY boost::asio::ssl::rfc2818_verification
+#endif
+
 // openssl genrsa -out /tmp/KEY 4096
 // openssl req -new -key /tmp/KEY -out /tmp/REQ
 // openssl x509 -req -days 999999 -sha256 -in /tmp/REQ -signkey /tmp/KEY -out /tmp/CERT
