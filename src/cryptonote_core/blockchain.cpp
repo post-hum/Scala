@@ -867,6 +867,8 @@ difficulty_type Blockchain::get_difficulty_for_next_block() {
     return m_db->height() ? m_fixed_difficulty : 1;
   }
 
+  LOG_PRINT_L3("Blockchain::" << __func__);
+
 start:
   difficulty_type D = 0;
 
@@ -941,7 +943,6 @@ start:
     m_timestamps_and_difficulties_height = height;
     timestamps = m_timestamps;
     difficulties = m_difficulties;
-    check = true;
   }
   // else
   std::vector<uint64_t> timestamps_from_cache = timestamps;
@@ -1004,7 +1005,6 @@ start:
     m_timestamps = timestamps;
     m_difficulties = difficulties;
   }
-
   size_t target = get_difficulty_target();
   difficulty_type diff = next_difficulty(timestamps, difficulties, target);
 
