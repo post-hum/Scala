@@ -48,7 +48,7 @@ WALLET_DIRECTORY = builddir + "/functional-tests-directory"
 FUNCTIONAL_TESTS_DIRECTORY = builddir + "/tests/functional_tests"
 DIFFICULTY = 10
 
-scalad_base = [builddir + "/bin/scalad", "--regtest", "--fixed-difficulty", str(DIFFICULTY), "--no-igd", "--p2p-bind-port", "scalad_p2p_port", "--rpc-bind-port", "scalad_rpc_port", "--zmq-rpc-bind-port", "scalad_zmq_port", "--zmq-pub", "scalad_zmq_pub", "--non-interactive", "--disable-dns-checkpoints", "--check-updates", "disabled", "--rpc-ssl", "disabled", "--data-dir", "scalad_data_dir", "--log-level", "1"]
+scalad_base = [builddir + "/bin/scalad", "--regtest", "--fixed-difficulty", str(DIFFICULTY), "--no-igd", "--p2p-bind-port", "scalad_p2p_port", "--rpc-bind-port", "scalad_rpc_port", "--zmq-rpc-bind-port", "scalad_zmq_port", "--zmq-pub", "scalad_zmq_pub", "--non-interactive", "--disable-dns-checkpoints", "--check-updates", "disabled", "--rpc-ssl", "disabled", "--data-dir", "scalad_data_dir", "--log-level", "1", "--rpc-max-connections-per-private-ip", "100", "--rpc-max-connections", "100"]
 scalad_extra = [
   ["--offline"],
   ["--rpc-payment-address", "44SKxxLQw929wRF6BA9paQ1EWFshNnKhXM3qz6Mo3JGDE2YG3xyzVutMStEicxbQGRfrYvAAYxH6Fe8rnD56EaNwUiqhcwR", "--rpc-payment-difficulty", str(DIFFICULTY), "--rpc-payment-credits", "5000", "--offline"],
