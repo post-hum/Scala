@@ -1,5 +1,4 @@
-# Copyright (c) 2014-2023, The Monero Project
-# Copyright (c) 2021-2023, Haku Labs MTÜ
+# Copyright (c) 2014-2022, The Scala Project
 #
 # All rights reserved.
 #
@@ -91,12 +90,14 @@ set(unit_tests_sources
   hardfork.cpp
   unbound.cpp
   uri.cpp
+  util.cpp
   varint.cpp
   ver_rct_non_semantics_simple_cached.cpp
   ringct.cpp
   output_selection.cpp
   vercmp.cpp
   ringdb.cpp
+  wallet_storage.cpp
   wipeable_string.cpp
   is_hdd.cpp
   aligned.cpp

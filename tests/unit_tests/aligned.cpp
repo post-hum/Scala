@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023, The scala Project
+// Copyright (c) 2018-2022, The Scala Project
 
 // 
 // All rights reserved.
@@ -29,6 +29,7 @@
 
 #include "gtest/gtest.h"
 
+#include <cstdint>
 #include "common/aligned.h"
 
 TEST(aligned, large_null) { ASSERT_TRUE(aligned_malloc((size_t)-1, 1) == NULL); }

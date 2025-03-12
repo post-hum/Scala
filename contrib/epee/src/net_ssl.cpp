@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023, The Scala Project
+// Copyright (c) 2018-2022, The Scala Project
 
 // 
 // All rights reserved.
@@ -30,7 +30,6 @@
 #include <string.h>
 #include <thread>
 #include <boost/asio/ssl.hpp>
-#include <boost/asio/steady_timer.hpp>
 #include <boost/cerrno.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/asio/strand.hpp>
@@ -39,8 +38,8 @@
 #include <openssl/ssl.h>
 #include <openssl/pem.h>
 #include "misc_log_ex.h"
+#include "net/net_helper.h"
 #include "net/net_ssl.h"
-#include "net/net_utils_base.h"
 #include "file_io_utils.h" // to validate .crt and .key paths
 
 #undef SCALA_DEFAULT_LOG_CATEGORY
@@ -497,6 +496,13 @@ void ssl_options_t::configure(
   const std::string& host) const
 {
   socket.next_layer().set_option(boost::asio::ip::tcp::no_delay(true));
+  {
+    // in case server is doing "virtual" domains, set hostname
+    SSL* const ssl_ctx = socket.native_handle();
+    if (type == boost::asio::ssl::stream_base::client && !host.empty() && ssl_ctx)
+      SSL_set_tlsext_host_name(ssl_ctx, host.c_str());
+  }
+
 
   /* Using system-wide CA store for client verification is funky - there is
      no expected hostname for server to verify against. If server doesn't have
@@ -514,11 +520,7 @@ void ssl_options_t::configure(
   {
     socket.set_verify_mode(boost::asio::ssl::verify_peer | boost::asio::ssl::verify_fail_if_no_peer_cert);
 
-    // in case server is doing "virtual" domains, set hostname
-    SSL* const ssl_ctx = socket.native_handle();
-    if (type == boost::asio::ssl::stream_base::client && !host.empty() && ssl_ctx)
-      SSL_set_tlsext_host_name(ssl_ctx, host.c_str());
-
+    
     socket.set_verify_callback([&](const bool preverified, boost::asio::ssl::verify_context &ctx)
     {
       // preverified means it passed system or user CA check. System CA is never loaded

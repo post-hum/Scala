@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr">
 <context>
-    <name>scala::AddressBookImpl</name>
+    <name>Scala::AddressBookImpl</name>
     <message>
         <location filename="../src/wallet/api/address_book.cpp" line="53"/>
         <source>Invalid destination address</source>
@@ -15,7 +15,7 @@
     </message>
 </context>
 <context>
-    <name>scala::PendingTransactionImpl</name>
+    <name>Scala::PendingTransactionImpl</name>
     <message>
         <location filename="../src/wallet/api/pending_transaction.cpp" line="91"/>
         <source>Attempting to save transaction to file, but specified file(s) exist. Exiting to not risk overwriting. File:</source>
@@ -68,7 +68,7 @@
     </message>
 </context>
 <context>
-    <name>scala::UnsignedTransactionImpl</name>
+    <name>Scala::UnsignedTransactionImpl</name>
     <message>
         <location filename="../src/wallet/api/unsigned_transaction.cpp" line="75"/>
         <source>This is a watch only wallet</source>
@@ -122,7 +122,7 @@
     </message>
 </context>
 <context>
-    <name>scala::WalletImpl</name>
+    <name>Scala::WalletImpl</name>
     <message>
         <location filename="../src/wallet/api/wallet.cpp" line="1513"/>
         <location filename="../src/wallet/api/wallet.cpp" line="1602"/>
@@ -1027,7 +1027,7 @@ Get help about a subcommand with: help mms &lt;subcommand&gt;, or mms help &lt;s
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="3444"/>
-        <source>Set or modify authorized signer info (single-word label, transport address, scala address), or list all signers</source>
+        <source>Set or modify authorized signer info (single-word label, transport address, Scala address), or list all signers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1375,7 +1375,7 @@ Transaction </translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="2285"/>
-        <source>Unlike Bitcoin, your scala transactions and balance stay private and are not visible to the world by default.</source>
+        <source>Unlike Bitcoin, your Scala transactions and balance stay private and are not visible to the world by default.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1385,7 +1385,7 @@ Transaction </translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="2294"/>
-        <source>Welcome to scala and financial privacy. For more information see https://Getscala.org</source>
+        <source>Welcome to Scala and financial privacy. For more information see https://GetScala.org</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1551,8 +1551,8 @@ Transaction </translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="10320"/>
-        <source>scala Address</source>
-        <translation>Adresse scala</translation>
+        <source>Scala Address</source>
+        <translation>Adresse Scala</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="10324"/>
@@ -1663,13 +1663,13 @@ Transaction </translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="10545"/>
-        <source>Invalid scala address</source>
-        <translation>Adresse scala invalide</translation>
+        <source>Invalid Scala address</source>
+        <translation>Adresse Scala invalide</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="10552"/>
-        <source>Wallet state does not allow changing scala addresses anymore</source>
-        <translation>L&apos;état du portefeuille ne permet plus de changer les adresses scala</translation>
+        <source>Wallet state does not allow changing Scala addresses anymore</source>
+        <translation>L&apos;état du portefeuille ne permet plus de changer les adresses Scala</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="10564"/>
@@ -2468,38 +2468,38 @@ Transaction </translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="2282"/>
-        <source>Welcome to scala, the private cryptocurrency.</source>
-        <translation>Bienvenue dans scala, la crypto-monnaie confidentielle.</translation>
+        <source>Welcome to Scala, the private cryptocurrency.</source>
+        <translation>Bienvenue dans Scala, la crypto-monnaie confidentielle.</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="2284"/>
-        <source>scala, like Bitcoin, is a cryptocurrency. That is, it is digital money.</source>
-        <translation>scala, comme Bitcoin, est une crypto-monnaie. C&apos;est à dire que c&apos;est une monnaie numérique.</translation>
+        <source>Scala, like Bitcoin, is a cryptocurrency. That is, it is digital money.</source>
+        <translation>Scala, comme Bitcoin, est une crypto-monnaie. C&apos;est à dire que c&apos;est une monnaie numérique.</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="2288"/>
-        <source>scala protects your privacy on the blockchain, and while scala strives to improve all the time,</source>
+        <source>Scala protects your privacy on the blockchain, and while Scala strives to improve all the time,</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="2289"/>
-        <source>no privacy technology can be 100% perfect, scala included.</source>
-        <translation>aucune technologie de confidentialité n&apos;est parfaite à 100%, scala inclus.</translation>
+        <source>no privacy technology can be 100% perfect, Scala included.</source>
+        <translation>aucune technologie de confidentialité n&apos;est parfaite à 100%, Scala inclus.</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="2290"/>
-        <source>scala cannot protect you from malware, and it may not be as effective as we hope against powerful adversaries.</source>
+        <source>Scala cannot protect you from malware, and it may not be as effective as we hope against powerful adversaries.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="2291"/>
-        <source>Flaws in scala may be discovered in the future, and attacks may be developed to peek under some</source>
-        <translation>Des failles dans scala pourraient être découvertes dans le futur, et des attaques pourraient être développées pour jeter un coup d&apos;oeil sous certaines</translation>
+        <source>Flaws in Scala may be discovered in the future, and attacks may be developed to peek under some</source>
+        <translation>Des failles dans Scala pourraient être découvertes dans le futur, et des attaques pourraient être développées pour jeter un coup d&apos;oeil sous certaines</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="2292"/>
-        <source>of the layers of privacy scala provides. Be safe and practice defense in depth.</source>
-        <translation>des couches de confidentialité que scala fournit. Soyez prudent et pratiquez la défense en profondeur.</translation>
+        <source>of the layers of privacy Scala provides. Be safe and practice defense in depth.</source>
+        <translation>des couches de confidentialité que Scala fournit. Soyez prudent et pratiquez la défense en profondeur.</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="2363"/>
@@ -2609,8 +2609,8 @@ Amount, Spent(&quot;T&quot;|&quot;F&quot;), &quot;frozen&quot;|&quot;locked&quot
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="3134"/>
-        <source>Donate &lt;amount&gt; to the development team (donate.scalaproject.io).</source>
-        <translation>Donner &lt;montant&gt; à l&apos;équipe de développement (donate.scalaproject.io).</translation>
+        <source>Donate &lt;amount&gt; to the development team (donate.getscala.org).</source>
+        <translation>Donner &lt;montant&gt; à l&apos;équipe de développement (donate.getscala.org).</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="3141"/>
@@ -2716,9 +2716,9 @@ Si l&apos;argument &quot;tag_description&quot; est spécifié, le texte arbitrai
  auto-low-priority &lt;1|0&gt;
    Whether to automatically use the low priority fee level when it&apos;s safe to do so.
  segregate-pre-fork-outputs &lt;1|0&gt;
-   Set this if you intend to spend outputs on both scala AND a key reusing fork.
+   Set this if you intend to spend outputs on both Scala AND a key reusing fork.
  key-reuse-mitigation2 &lt;1|0&gt;
-   Set this if you are not sure whether you will spend on a key reusing scala fork later.
+   Set this if you are not sure whether you will spend on a key reusing Scala fork later.
  subaddress-lookahead &lt;major&gt;:&lt;minor&gt;
    Set the lookahead sizes for the subaddress hash table.
  segregation-height &lt;n&gt;
@@ -2951,8 +2951,8 @@ Sinon, vous prouvez le plus petit solde supérieur à &lt;montant&gt; dans votre
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="3565"/>
-        <source>Prints basic info about scala for first time users</source>
-        <translation>Affiche des informations basiques à propos de scala pour les nouveaux utilisateurs</translation>
+        <source>Prints basic info about Scala for first time users</source>
+        <translation>Affiche des informations basiques à propos de Scala pour les nouveaux utilisateurs</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="3573"/>
@@ -3072,8 +3072,8 @@ Sinon, vous prouvez le plus petit solde supérieur à &lt;montant&gt; dans votre
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="4521"/>
-        <source>If you are new to scala, type &quot;welcome&quot; for a brief overview.</source>
-        <translation>Si vous êtes nouveau dans scala, tapez &quot;welcome&quot; pour un bref aperçu.</translation>
+        <source>If you are new to Scala, type &quot;welcome&quot; for a brief overview.</source>
+        <translation>Si vous êtes nouveau dans Scala, tapez &quot;welcome&quot; pour un bref aperçu.</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="4585"/>
@@ -3148,7 +3148,7 @@ votre portefeuille à nouveau (mais les clés de votre portefeuille ne risquent 
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="5112"/>
-        <source>Background mining enabled. Thank you for supporting the scala network.</source>
+        <source>Background mining enabled. Thank you for supporting the Scala network.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4168,7 +4168,7 @@ Image de clé, &quot;absolue&quot;, liste de cercles</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="4500"/>
-        <source>You are strongly encouraged to connect to the scala network using your own daemon</source>
+        <source>You are strongly encouraged to connect to the Scala network using your own daemon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4415,7 +4415,7 @@ Entrée %llu/%llu (%s): montant=%s</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="6168"/>
-        <source>I locked your scala wallet to protect you while you were away</source>
+        <source>I locked your Scala wallet to protect you while you were away</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4485,8 +4485,8 @@ Entrée %llu/%llu (%s): montant=%s</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="7388"/>
-        <source>Donating %s %s to The scala Project (donate.scalaproject.io or %s).</source>
-        <translation>Don de %s %s à The scala Project (donate.scalaproject.io ou %s).</translation>
+        <source>Donating %s %s to The Scala Project (donate.getscala.org or %s).</source>
+        <translation>Don de %s %s à The Scala Project (donate.getscala.org ou %s).</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="7722"/>
@@ -5558,8 +5558,8 @@ Utilisez &quot;mms note&quot; pour afficher les notes en attente</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="463"/>
-        <source> scala Address = </source>
-        <translation> Adresse scala = </translation>
+        <source> Scala Address = </source>
+        <translation> Adresse Scala = </translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="475"/>
@@ -5706,10 +5706,10 @@ Utilisez &quot;mms note&quot; pour afficher les notes en attente</translation>
         <location filename="../src/simplewallet/simplewallet.cpp" line="10137"/>
         <source>This is the command line scala wallet. It needs to connect to a scala
 daemon to work correctly.
-WARNING: Do not reuse your scala keys on another fork, UNLESS this fork has key reuse mitigations built in. Doing so will harm your privacy.</source>
+WARNING: Do not reuse your Scala keys on another fork, UNLESS this fork has key reuse mitigations built in. Doing so will harm your privacy.</source>
         <translation>Ceci est le portefeuille scala en ligne de commande.
 Il a besoin de se connecter à un démon scala pour fonctionner correctement.
-ATTENTION : Ne réutilisez pas vos clés scala avec un autre fork, À MOINS QUE ce fork inclue des mitigations contre la réutilisation des clés. Faire ceci nuira à votre confidentialité.</translation>
+ATTENTION : Ne réutilisez pas vos clés Scala avec un autre fork, À MOINS QUE ce fork inclue des mitigations contre la réutilisation des clés. Faire ceci nuira à votre confidentialité.</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="10162"/>

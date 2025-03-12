@@ -37,7 +37,7 @@ except:
 # a main offline scalad, does most of the tests
 # a restricted RPC scalad setup with RPC payment
 # two local online scalads connected to each other
-N_scalaDS = 4
+N_SCALADS = 4
 
 # 4 wallets connected to the main offline scalad
 # 1 wallet connected to the first local online scalad
@@ -70,7 +70,7 @@ processes = []
 outputs = []
 ports = []
 
-for i in range(N_scalaDS):
+for i in range(N_SCALADS):
   command_lines.append([str(18180+i) if x == "scalad_rpc_port" else str(18280+i) if x == "scalad_p2p_port" else str(18380+i) if x == "scalad_zmq_port" else "tcp://127.0.0.1:" + str(18480+i) if x == "scalad_zmq_pub" else builddir + "/functional-tests-directory/scalad" + str(i) if x == "scalad_data_dir" else x for x in scalad_base])
   if i < len(scalad_extra):
     command_lines[-1] += scalad_extra[i]
@@ -99,8 +99,6 @@ try:
   os.environ['MAKE_TEST_SIGNATURE'] = FUNCTIONAL_TESTS_DIRECTORY + '/make_test_signature'
   os.environ['SEEDHASH_EPOCH_BLOCKS'] = "8"
   os.environ['SEEDHASH_EPOCH_LAG'] = "4"
-  if not 'MINING_SILENT' in os.environ:
-    os.environ['MINING_SILENT'] = "1"
 
   for i in range(len(command_lines)):
     #print('Running: ' + str(command_lines[i]))

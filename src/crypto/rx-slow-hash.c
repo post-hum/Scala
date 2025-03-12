@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2023, The scala Project
+// Copyright (c) 2019-2022, The Scala Project
 //
 // All rights reserved.
 //
@@ -104,7 +104,7 @@ static inline int disabled_flags(void) {
     return flags;
   }
 
-  const char *env = getenv("scala_RANDOMX_UMASK");
+  const char *env = getenv("SCALA_RANDOMX_UMASK");
   if (!env) {
     flags = 0;
   }
@@ -200,16 +200,16 @@ static void rx_alloc_dataset(randomx_flags flags, randomx_dataset** dataset, int
     static int shown = 0;
     if (!shown) {
       shown = 1;
-      minfo(RX_LOGCAT, "RandomX dataset is disabled by scala_RANDOMX_UMASK environment variable.");
+      minfo(RX_LOGCAT, "RandomX dataset is disabled by SCALA_RANDOMX_UMASK environment variable.");
     }
     return;
   }
 
-  if (!ignore_env && !getenv("scala_RANDOMX_FULL_MEM")) {
+  if (!ignore_env && !getenv("SCALA_RANDOMX_FULL_MEM")) {
     static int shown = 0;
     if (!shown) {
       shown = 1;
-      minfo(RX_LOGCAT, "RandomX dataset is not enabled by default. Use scala_RANDOMX_FULL_MEM environment variable to enable it.");
+      minfo(RX_LOGCAT, "RandomX dataset is not enabled by default. Use SCALA_RANDOMX_FULL_MEM environment variable to enable it.");
     }
     return;
   }
@@ -510,7 +510,7 @@ uint32_t rx_get_miner_thread() {
 }
 
 void felidae_hash(const void *data, size_t length, char *hash, size_t extra_iterations) {
-    felidae_calculate_hash(data, length, hash, extra_iterations);
+  felidae_calculate_hash(data, length, hash, extra_iterations);
 }
 
 void rx_slow_hash_allocate_state() {}

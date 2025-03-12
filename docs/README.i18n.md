@@ -1,9 +1,9 @@
-scala daemon internationalization
+Scala daemon internationalization
 ==================================
 
-The scala command line tools can be translated in various languages. If you wish to contribute and need help/support, contact the [scala Localization Workgroup on Taiga](https://taiga.getscala.org/project/erciccione-scala-localization/) or come chat on `#scala-translations` (Libera/IRC, riot/matrix, MatterMost)
+The Scala command line tools can be translated in various languages. If you wish to contribute and need help/support, contact the [Scala Localization Workgroup on Taiga](https://taiga.getscala.org/project/erciccione-scala-localization/) or come chat on `#scala-translations` (Libera/IRC, riot/matrix, MatterMost)
 
-In order to use the same translation workflow as the [scala Core GUI](https://github.com/scala-project/scala-gui), they use Qt Linguist translation files.  However, to avoid the dependencies on Qt this normally implies, they use a custom loader to read those files at runtime.
+In order to use the same translation workflow as the [Scala Core GUI](https://github.com/scala-project/scala-gui), they use Qt Linguist translation files.  However, to avoid the dependencies on Qt this normally implies, they use a custom loader to read those files at runtime.
 
 ### Tools for translators
 

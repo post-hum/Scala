@@ -1,6 +1,6 @@
-# Portions Copyright (c) 2017-2023, The scala Project
+# Portions Copyright (c) 2017-2022, The Scala Project
 # This file is based off of the https://code.google.com/archive/p/ios-cmake/
-# It has been altered for scala iOS development
+# It has been altered for Scala iOS development
 #
 #
 # Options:

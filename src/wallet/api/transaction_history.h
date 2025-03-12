@@ -1,5 +1,4 @@
-// Copyright (c) 2014-2023, The Monero Project
-// Copyright (c) 2021-2023, Haku Labs MTÜ
+// Copyright (c) 2014-2022, The Scala Project
 //
 // All rights reserved.
 //
@@ -32,7 +31,7 @@
 #include "wallet/api/wallet2_api.h"
 #include <boost/thread/shared_mutex.hpp>
 
-namespace scala {
+namespace Scala {
 
 class WalletImpl;
 

@@ -1,5 +1,4 @@
-// Copyright (c) 2014-2023, The Monero Project
-// Copyright (c) 2021-2023, Haku Labs MTÜ
+// Copyright (c) 2014-2022, The Scala Project
 // 
 // All rights reserved.
 // 
@@ -45,7 +44,7 @@
 #include <boost/functional/hash.hpp>
 
 #include "include_base_utils.h"
-#include "chaingen_serialization.h"
+#include "common/boost_serialization_helper.h"
 #include "common/command_line.h"
 #include "common/threadpool.h"
 
@@ -58,8 +57,8 @@
 #include "cryptonote_basic/cryptonote_boost_serialization.h"
 #include "misc_language.h"
 
-#undef scala_DEFAULT_LOG_CATEGORY
-#define scala_DEFAULT_LOG_CATEGORY "tests.core"
+#undef SCALA_DEFAULT_LOG_CATEGORY
+#define SCALA_DEFAULT_LOG_CATEGORY "tests.core"
 
 
 
@@ -451,7 +450,7 @@ bool construct_tx_rct(const cryptonote::account_keys& sender_account_keys,
     std::vector<cryptonote::tx_source_entry>& sources,
     const std::vector<cryptonote::tx_destination_entry>& destinations,
     const boost::optional<cryptonote::account_public_address>& change_addr,
-    std::vector<uint8_t> extra, cryptonote::transaction& tx, uint64_t unlock_time,
+    std::vector<uint8_t> extra, cryptonote::transaction& tx,
     bool rct=false, rct::RangeProofType range_proof_type=rct::RangeProofBorromean, int bp_version = 0);
 
 

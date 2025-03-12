@@ -1,5 +1,4 @@
-// Copyright (c) 2014-2023, The Monero Project
-// Copyright (c) 2021-2023, Haku Labs MTÜ
+// Copyright (c) 2014-2022, The Scala Project
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
@@ -43,8 +42,8 @@
 #include "profile_tools.h"
 #include "ringct/rctOps.h"
 
-#undef scala_DEFAULT_LOG_CATEGORY
-#define scala_DEFAULT_LOG_CATEGORY "blockchain.db.lmdb"
+#undef SCALA_DEFAULT_LOG_CATEGORY
+#define SCALA_DEFAULT_LOG_CATEGORY "blockchain.db.lmdb"
 
 
 #if defined(__i386) || defined(__x86_64)

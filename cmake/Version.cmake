@@ -1,5 +1,4 @@
-# Copyright (c) 2014-2023, The Monero Project
-# Copyright (c) 2021-2023, Haku Labs MTÜ
+# Copyright (c) 2014-2022, The Scala Project
 # 
 # All rights reserved.
 # 
@@ -28,7 +27,7 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 function (write_version tag)
-  set(VERSIONTAG "${tag}" CACHE STRING "The tag portion of the scala software version" FORCE)
+  set(VERSIONTAG "${tag}" CACHE STRING "The tag portion of the Scala software version" FORCE)
   configure_file("${CMAKE_CURRENT_LIST_DIR}/../src/version.cpp.in" "${CMAKE_BINARY_DIR}/version.cpp")
 endfunction ()
 

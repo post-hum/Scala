@@ -23,11 +23,8 @@
 
 #include <boost/archive/basic_archive.hpp>
 #include <boost/predef/other/endian.h>
-#include <boost/archive/impl/archive_serializer_map.ipp>
 
-#if BOOST_VERSION >= 107400
-    #include <boost/serialization/library_version_type.hpp>
-#endif
+#include <boost/archive/impl/archive_serializer_map.ipp>
 
 namespace boost { namespace archive {
 
@@ -47,9 +44,16 @@ reverse_bytes(signed char size, char *address){
     char * first = address;
     char * last = first + size - 1;
     for(;first < last;++first, --last){
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow="
+#endif
         char x = *last;
         *last = *first;
         *first = x;
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
     }
 }
 

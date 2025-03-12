@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2023, The scala Project
+// Copyright (c) 2017-2022, The Scala Project
 //
 // All rights reserved.
 //
@@ -27,8 +27,8 @@
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef scala_DEVICE_COLD_H
-#define scala_DEVICE_COLD_H
+#ifndef SCALA_DEVICE_COLD_H
+#define SCALA_DEVICE_COLD_H
 
 #include "wallet/wallet2.h"
 #include <boost/optional/optional.hpp>
@@ -185,4 +185,4 @@ namespace hw {
   };
 }
 
-#endif //scala_DEVICE_COLD_H
+#endif //SCALA_DEVICE_COLD_H

@@ -1,5 +1,4 @@
-# Copyright (c) 2014-2023, The Monero Project
-# Copyright (c) 2021-2023, Haku Labs MTÜ
+# Copyright (c) 2014-2022, The Scala Project
 #
 # All rights reserved.
 #
@@ -64,15 +63,15 @@ if (USE_COMPILATION_TIME_PROFILER)
 endif()
 
 if (${CMAKE_VERSION} VERSION_GREATER "3.0.0" AND CMAKE_MAKE_PROGRAM MATCHES "ninja")
-  set(scala_PARALLEL_COMPILE_JOBS "" CACHE STRING "The maximum number of concurrent compilation jobs.")
-  if (scala_PARALLEL_COMPILE_JOBS)
-    set_property(GLOBAL APPEND PROPERTY JOB_POOLS compile_job_pool=${scala_PARALLEL_COMPILE_JOBS})
+  set(SCALA_PARALLEL_COMPILE_JOBS "" CACHE STRING "The maximum number of concurrent compilation jobs.")
+  if (SCALA_PARALLEL_COMPILE_JOBS)
+    set_property(GLOBAL APPEND PROPERTY JOB_POOLS compile_job_pool=${SCALA_PARALLEL_COMPILE_JOBS})
     set(CMAKE_JOB_POOL_COMPILE compile_job_pool)
   endif ()
 
-  set(scala_PARALLEL_LINK_JOBS "" CACHE STRING "The maximum number of concurrent link jobs.")
-  if (scala_PARALLEL_LINK_JOBS)
-    set_property(GLOBAL APPEND PROPERTY JOB_POOLS link_job_pool=${scala_PARALLEL_LINK_JOBS})
+  set(SCALA_PARALLEL_LINK_JOBS "" CACHE STRING "The maximum number of concurrent link jobs.")
+  if (SCALA_PARALLEL_LINK_JOBS)
+    set_property(GLOBAL APPEND PROPERTY JOB_POOLS link_job_pool=${SCALA_PARALLEL_LINK_JOBS})
     set(CMAKE_JOB_POOL_LINK link_job_pool)
   endif ()
 endif ()
@@ -193,6 +192,15 @@ endfunction()
 # - headers_found:    Output variable, which will hold the found headers
 # - module_root_dir:  The search path for the headers. Typically it will be the module's root dir, so "${CMAKE_CURRENT_SOURCE_DIR}" or a derivative of it.
 macro (scala_find_all_headers headers_found module_root_dir)
+  file(GLOB ${headers_found}
+           "${module_root_dir}/*.h*"    # h* will include hpps as well.
+           "${module_root_dir}/**/*.h*" # Any number of subdirs will be included.
+           "${module_root_dir}/*.inl"   # .inl is typically template code and is being treated as headers (it's being included).
+           "${module_root_dir}/**/*.inl"
+)
+endmacro()
+
+macro (monero_find_all_headers headers_found module_root_dir)
   file(GLOB ${headers_found}
            "${module_root_dir}/*.h*"    # h* will include hpps as well.
            "${module_root_dir}/**/*.h*" # Any number of subdirs will be included.
@@ -413,7 +421,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 else()
   set(DEFAULT_BUILD_DEBUG_UTILITIES OFF)
 endif()
-option(BUILD_DEBUG_UTILITIES "Build debug utilities." ${DEFAULT_BUILD_DEBUG_UTILITIES})
+option(BUILD_DEBUG_UTILITIES "Build debug utilities." DEFAULT_BUILD_DEBUG_UTILITIES)
 
 if(OSSFUZZ)
   message(STATUS "Using OSS-Fuzz fuzzing system")
@@ -450,11 +458,14 @@ endif()
 # Check if we're on OpenBSD. See the README.md for build instructions.
 if(CMAKE_SYSTEM_NAME MATCHES "kOpenBSD.*|OpenBSD.*")
   set(OPENBSD TRUE)
-elseif(CMAKE_SYSTEM_NAME MATCHES "kNetBSD.*|NetBSD.*")
-  set(NETBSD TRUE)
-elseif(CMAKE_SYSTEM_NAME MATCHES ".*BSDI.*")
-  set(BSDI TRUE)
 endif()
+
+# TODO: check bsdi, NetBSD, to see if they need the same FreeBSD changes
+#
+# elseif(CMAKE_SYSTEM_NAME MATCHES "kNetBSD.*|NetBSD.*")
+#   set(NETBSD TRUE)
+# elseif(CMAKE_SYSTEM_NAME MATCHES ".*BSDI.*")
+#   set(BSDI TRUE)
 
 include_directories(external/rapidjson/include external/easylogging++ src contrib/epee/include external external/supercop/include)
 
@@ -518,7 +529,7 @@ if(SANITIZE)
 endif()
 
 # Set default blockchain storage location:
-# memory was the default in Cryptonote before scala implemented LMDB, it still works but is unnecessary.
+# memory was the default in Cryptonote before Scala implemented LMDB, it still works but is unnecessary.
 # set(DATABASE memory)
 set(DATABASE lmdb)
 message(STATUS "Using LMDB as default DB type")
@@ -529,7 +540,7 @@ add_definitions("-DBLOCKCHAIN_DB=${BLOCKCHAIN_DB}")
 # Can't install hook in static build on OSX, because OSX linker does not support --wrap
 # On ARM, having libunwind package (with .so's only) installed breaks static link.
 # When possible, avoid stack tracing using libunwind in favor of using easylogging++.
-if (APPLE OR NETBSD)
+if (APPLE)
   set(DEFAULT_STACK_TRACE OFF)
   set(LIBUNWIND_LIBRARIES "")
 elseif (DEPENDS AND NOT LINUX)
@@ -605,8 +616,8 @@ add_definition_if_function_found(strptime HAVE_STRPTIME)
 
 add_definitions(-DAUTO_INITIALIZE_EASYLOGGINGPP)
 
-set(scala_GENERATED_HEADERS_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated_include")
-include_directories(${scala_GENERATED_HEADERS_DIR})
+set(SCALA_GENERATED_HEADERS_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated_include")
+include_directories(${SCALA_GENERATED_HEADERS_DIR})
 
 # As of OpenBSD 6.8, -march=<anything> breaks the build
 function(set_default_arch)
@@ -627,7 +638,7 @@ option(COVERAGE "Enable profiling for test coverage report" OFF)
 if(COVERAGE)
     message(STATUS "Building with profiling for test coverage report")
 endif()
-macro (scala_enable_coverage)
+macro (monero_enable_coverage)
   if(COVERAGE)
     foreach(COV_FLAG -fprofile-arcs -ftest-coverage --coverage)
       set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   ${COV_FLAG}")
@@ -641,24 +652,24 @@ function (scala_add_library name)
 endfunction()
 
 function (scala_add_library_with_deps)
-  cmake_parse_arguments(scala_ADD_LIBRARY "" "NAME" "DEPENDS;SOURCES" ${ARGN})
-  source_group("${scala_ADD_LIBRARY_NAME}" FILES ${scala_ADD_LIBRARY_SOURCES})
+  cmake_parse_arguments(SCALA_ADD_LIBRARY "" "NAME" "DEPENDS;SOURCES" ${ARGN})
+  source_group("${SCALA_ADD_LIBRARY_NAME}" FILES ${SCALA_ADD_LIBRARY_SOURCES})
 
   # Define a ("virtual") object library and an actual library that links those
   # objects together. The virtual libraries can be arbitrarily combined to link
   # any subset of objects into one library archive. This is used for releasing
   # libwallet, which combines multiple components.
-  set(objlib obj_${scala_ADD_LIBRARY_NAME})
-  add_library(${objlib} OBJECT ${scala_ADD_LIBRARY_SOURCES})
-  add_library("${scala_ADD_LIBRARY_NAME}" $<TARGET_OBJECTS:${objlib}>)
-  scala_set_target_no_relink("${scala_ADD_LIBRARY_NAME}")
-  scala_set_target_strip    ("${scala_ADD_LIBRARY_NAME}")
-  if (scala_ADD_LIBRARY_DEPENDS)
-    add_dependencies(${objlib} ${scala_ADD_LIBRARY_DEPENDS})
+  set(objlib obj_${SCALA_ADD_LIBRARY_NAME})
+  add_library(${objlib} OBJECT ${SCALA_ADD_LIBRARY_SOURCES})
+  add_library("${SCALA_ADD_LIBRARY_NAME}" $<TARGET_OBJECTS:${objlib}>)
+  scala_set_target_no_relink("${SCALA_ADD_LIBRARY_NAME}")
+  scala_set_target_strip    ("${SCALA_ADD_LIBRARY_NAME}")
+  if (SCALA_ADD_LIBRARY_DEPENDS)
+    add_dependencies(${objlib} ${SCALA_ADD_LIBRARY_DEPENDS})
   endif()
-  set_property(TARGET "${scala_ADD_LIBRARY_NAME}" PROPERTY FOLDER "libs")
+  set_property(TARGET "${SCALA_ADD_LIBRARY_NAME}" PROPERTY FOLDER "libs")
   target_compile_definitions(${objlib}
-    PRIVATE $<TARGET_PROPERTY:${scala_ADD_LIBRARY_NAME},INTERFACE_COMPILE_DEFINITIONS>)
+    PRIVATE $<TARGET_PROPERTY:${SCALA_ADD_LIBRARY_NAME},INTERFACE_COMPILE_DEFINITIONS>)
 endfunction ()
 
 # Generate header for embedded translations
@@ -699,7 +710,7 @@ else()
 endif()
 
 # Trezor support check
-include(CheckTrezor)
+# include(CheckTrezor)
 
 if(MSVC)
   add_definitions("/bigobj /MP /W3 /GS- /D_CRT_SECURE_NO_WARNINGS /wd4996 /wd4345 /D_WIN32_WINNT=0x0600 /DWIN32_LEAN_AND_MEAN /DGTEST_HAS_TR1_TUPLE=0 /FIinline_c.h /D__SSE4_1__")
@@ -811,7 +822,7 @@ else()
     set(STATIC_ASSERT_CPP_FLAG "-Dstatic_assert=_Static_assert")
   endif()
 
-  scala_enable_coverage()
+  monero_enable_coverage()
   # With GCC 6.1.1 the compiled binary malfunctions due to aliasing. Until that
   # is fixed in the code (Issue #847), force compiler to be conservative.
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-strict-aliasing")
@@ -1137,9 +1148,7 @@ if (HIDAPI_FOUND OR LibUSB_COMPILE_TEST_PASSED)
   endif()
 endif()
 
-if(NOT OPENBSD)
-  option(USE_READLINE "Build with GNU readline support." ON)
-endif()
+option(USE_READLINE "Build with GNU readline support." ON)
 if(USE_READLINE AND NOT DEPENDS)
   find_package(Readline)
   if(READLINE_FOUND AND GNU_READLINE_FOUND)

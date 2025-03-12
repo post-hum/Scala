@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2023, The scala Project
+// Copyright (c) 2017-2022, The Scala Project
 //
 // All rights reserved.
 //
@@ -27,8 +27,8 @@
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef scala_EXCEPTIONS_H
-#define scala_EXCEPTIONS_H
+#ifndef SCALA_EXCEPTIONS_H
+#define SCALA_EXCEPTIONS_H
 
 #include <exception>
 #include <string>
@@ -190,4 +190,4 @@ namespace proto {
 }
 }
 }
-#endif //scala_EXCEPTIONS_H
+#endif //SCALA_EXCEPTIONS_H

@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2023, The scala Project
+// Copyright (c) 2019-2022, The Scala Project
 // 
 // All rights reserved.
 // 
@@ -27,7 +27,7 @@
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // References:
-// - https://github.com/ArticMine/scala-Documents/blob/master/scalaScaling2021.pdf
+// - https://github.com/ArticMine/Scala-Documents/blob/master/ScalaScaling2021.pdf
 // - https://github.com/scala-project/research-lab/issues/70
 
 #define IN_UNIT_TESTS

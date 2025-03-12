@@ -1,5 +1,5 @@
 // Copyright (c) 2013, Sergey Lyubka
-// Copyright (c) 2017-2023, The scala Project
+// Copyright (c) 2017-2022, The Scala Project
 // All rights reserved.
 // Released under the MIT license.
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2023, The scala Project
+// Copyright (c) 2017-2022, The Scala Project
 // 
 // All rights reserved.
 // 
@@ -44,8 +44,8 @@ extern "C"
 #include "multiexp.h"
 #include "bulletproofs.h"
 
-#undef scala_DEFAULT_LOG_CATEGORY
-#define scala_DEFAULT_LOG_CATEGORY "bulletproofs"
+#undef SCALA_DEFAULT_LOG_CATEGORY
+#define SCALA_DEFAULT_LOG_CATEGORY "bulletproofs"
 
 //#define DEBUG_BP
 

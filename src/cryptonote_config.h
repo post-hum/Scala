@@ -1,5 +1,4 @@
-// Copyright (c) 2014-2023, The Monero Project
-// Copyright (c) 2021-2023, Haku Labs MTÜ
+// Copyright (c) 2014-2022, The Scala Project
 // 
 // All rights reserved.
 // 
@@ -31,6 +30,7 @@
 
 #pragma once
 
+#include <cstdint>
 #include <stdexcept>
 #include <string>
 #include <boost/uuid/uuid.hpp>
@@ -63,6 +63,7 @@
 #define CRYPTONOTE_SHORT_TERM_BLOCK_WEIGHT_SURGE_FACTOR 50
 #define CRYPTONOTE_COINBASE_BLOB_RESERVED_SIZE          600
 #define CRYPTONOTE_DISPLAY_DECIMAL_POINT                2
+
 // COIN - number of smallest units in one coin
 #define COIN                                            ((uint64_t)100)
 
@@ -76,23 +77,23 @@
 
 #define ORPHANED_BLOCKS_MAX_COUNT                       100
 
-#define DIFFICULTY_TARGET                               120
+
+#define DIFFICULTY_TARGET                               120  // seconds
 #define DIFFICULTY_TARGET_V2                            120  // seconds
 #define DIFFICULTY_TARGET_V1                            120  // seconds - before first fork
 #define DIFFICULTY_WINDOW                               720 // blocks
 #define DIFFICULTY_LAG                                  15  // !!!
 #define DIFFICULTY_CUT                                  60  // timestamps to cut after sorting
-#define DIFFICULTY_BLOCKS_COUNT                         DIFFICULTY_WINDOW_NEW
 #define DIFFICULTY_WINDOW_NEW                           120
+#define DIFFICULTY_BLOCKS_COUNT                         DIFFICULTY_WINDOW_NEW
 #define DIFFICULTY_BLOCKS_COUNT_NEW                     DIFFICULTY_WINDOW_NEW + 1
 #define CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT_NEW          60*5
+
 
 #define CRYPTONOTE_LOCKED_TX_ALLOWED_DELTA_SECONDS_V1   DIFFICULTY_TARGET_V1 * CRYPTONOTE_LOCKED_TX_ALLOWED_DELTA_BLOCKS
 #define CRYPTONOTE_LOCKED_TX_ALLOWED_DELTA_SECONDS_V2   DIFFICULTY_TARGET_V2 * CRYPTONOTE_LOCKED_TX_ALLOWED_DELTA_BLOCKS
 #define CRYPTONOTE_LOCKED_TX_ALLOWED_DELTA_BLOCKS       1
 
-#define CRYPTONOTE_LOCKED_TX_ALLOWED_DELTA_SECONDS      DIFFICULTY_TARGET * CRYPTONOTE_LOCKED_TX_ALLOWED_DELTA_BLOCKS
-#define CRYPTONOTE_LOCKED_TX_ALLOWED_DELTA_BLOCKS       1
 
 #define DIFFICULTY_BLOCKS_ESTIMATE_TIMESPAN             DIFFICULTY_TARGET_V1 //just alias; used by tests
 
@@ -103,8 +104,8 @@
 #define BLOCKS_SYNCHRONIZING_DEFAULT_COUNT              20     //by default, blocks count in blocks downloading
 #define BLOCKS_SYNCHRONIZING_MAX_COUNT                  2048   //must be a power of 2, greater than 128, equal to SEEDHASH_EPOCH_BLOCKS
 
-#define CRYPTONOTE_MEMPOOL_TX_LIVETIME                    (86400*3) //seconds, three days
-#define CRYPTONOTE_MEMPOOL_TX_FROM_ALT_BLOCK_LIVETIME     604800 //seconds, one week
+#define CRYPTONOTE_MEMPOOL_TX_LIVETIME                  (86400*3) //seconds, three days
+#define CRYPTONOTE_MEMPOOL_TX_FROM_ALT_BLOCK_LIVETIME   604800 //seconds, one week
 
 
 #define CRYPTONOTE_DANDELIONPP_STEMS              2 // number of outgoing stem connections per epoch
@@ -149,8 +150,8 @@
 #define P2P_DEFAULT_WHITELIST_CONNECTIONS_PERCENT       70
 #define P2P_DEFAULT_ANCHOR_CONNECTIONS_COUNT            2
 #define P2P_DEFAULT_SYNC_SEARCH_CONNECTIONS_COUNT       2
-#define P2P_DEFAULT_LIMIT_RATE_UP                       2048       // kB/s
-#define P2P_DEFAULT_LIMIT_RATE_DOWN                     8192       // kB/s
+#define P2P_DEFAULT_LIMIT_RATE_UP                       4096       // kB/s
+#define P2P_DEFAULT_LIMIT_RATE_DOWN                     16384      // kB/s
 
 #define P2P_FAILED_ADDR_FORGET_SECONDS                  (60*60)     //1 hour
 #define P2P_IP_BLOCKTIME                                (60*60*24)  //24 hour
@@ -186,13 +187,13 @@
 #define HF_VERSION_REJECT_SIGS_IN_COINBASE      12
 #define HF_VERSION_ENFORCE_MIN_AGE              12
 #define HF_VERSION_EFFECTIVE_SHORT_TERM_MEDIAN_IN_PENALTY 12
-#define HF_VERSION_DIARDI_V2                    13
 #define HF_VERSION_EXACT_COINBASE               13
 #define HF_VERSION_CLSAG                        13
 #define HF_VERSION_DETERMINISTIC_UNLOCK_TIME    13
 #define HF_VERSION_BULLETPROOF_PLUS             15
 #define HF_VERSION_VIEW_TAGS                    15
 #define HF_VERSION_2021_SCALING                 15
+#define HF_VERSION_DIARDI_V2                    13
 
 #define PER_KB_FEE_QUANTIZATION_DECIMALS        1
 #define CRYPTONOTE_SCALING_2021_FEE_ROUNDING_PLACES 2
@@ -231,7 +232,7 @@ namespace config
   uint16_t const P2P_DEFAULT_PORT = 11811;
   uint16_t const RPC_DEFAULT_PORT = 11812;
   uint16_t const ZMQ_RPC_DEFAULT_PORT = 11813;
-  boost::uuids::uuid const NETWORK_ID = { {
+  boost::uuids::uuid const NETWORK_ID = {{
       0xFB ,0x41, 0x71, 0x82 , 0x16, 0xFB , 0x41, 0x61, 0xFB, 0x31, 0x71, 0x82, 0x16, 0x41, 0xFB, 0x82
   }}; // Bender's nightmare
   std::string const GENESIS_TX =
@@ -246,7 +247,7 @@ namespace config
   "21"
   "01"
   "36f1ab59784ea887e3d74ae60b10f19043001cb08154f24ba83144e4129d2b43";
-
+  
   uint32_t const GENESIS_NONCE = 10000;
 
   // Hash domain separators
@@ -267,7 +268,7 @@ namespace config
   const unsigned char HASH_KEY_CLSAG_ROUND[] = "CLSAG_round";
   const unsigned char HASH_KEY_CLSAG_AGG_0[] = "CLSAG_agg_0";
   const unsigned char HASH_KEY_CLSAG_AGG_1[] = "CLSAG_agg_1";
-  const char HASH_KEY_MESSAGE_SIGNING[] = "scalaMessageSignature";
+  const char HASH_KEY_MESSAGE_SIGNING[] = "ScalaMessageSignature";
   const unsigned char HASH_KEY_MM_SLOT = 'm';
   const constexpr char HASH_KEY_MULTISIG_TX_PRIVKEYS_SEED[] = "multisig_tx_privkeys_seed";
   const constexpr char HASH_KEY_MULTISIG_TX_PRIVKEYS[] = "multisig_tx_privkeys";
@@ -284,22 +285,22 @@ namespace config
     uint16_t const P2P_DEFAULT_PORT = 22822;
     uint16_t const RPC_DEFAULT_PORT = 22823;
     uint16_t const ZMQ_RPC_DEFAULT_PORT = 22824;
-    boost::uuids::uuid const NETWORK_ID = { {
-        0x12 ,0x30, 0xF1, 0x71 , 0x61, 0x04 , 0x41, 0x61, 0x17, 0x31, 0x00, 0x82, 0x16, 0xA1, 0xA1, 0x11
-      } }; // Bender's daydream
-      std::string const GENESIS_TX =
-              "01"
-              "3c"
-              "01"
-              "ff"
-              "00"
-              "01"
-              "1e02"
-              "3993cd650fb296ba2e67351e1895cda56fa622c77c578c1f4ecc1c50024ada81"
-              "21"
-              "01"
-              "ac3c9963b078884f321a356268c13a6afc067ca8c01ce437506bdcc19a25d8ed";
-      uint32_t const GENESIS_NONCE = 10001;
+    boost::uuids::uuid const NETWORK_ID = {{
+      0x12 ,0x30, 0xF1, 0x71 , 0x61, 0x04 , 0x41, 0x61, 0x17, 0x31, 0x00, 0x82, 0x16, 0xA1, 0xA1, 0x11
+    }}; // Bender's daydream
+    std::string const GENESIS_TX =
+    "01"
+    "3c"
+    "01"
+    "ff"
+    "00"
+    "01"
+    "1e02"
+    "3993cd650fb296ba2e67351e1895cda56fa622c77c578c1f4ecc1c50024ada81"
+    "21"
+    "01"
+    "ac3c9963b078884f321a356268c13a6afc067ca8c01ce437506bdcc19a25d8ed";
+    uint32_t const GENESIS_NONCE = 10001;
   }
 
   namespace stagenet
@@ -310,9 +311,9 @@ namespace config
     uint16_t const P2P_DEFAULT_PORT = 33833;
     uint16_t const RPC_DEFAULT_PORT = 33834;
     uint16_t const ZMQ_RPC_DEFAULT_PORT = 33835;
-    boost::uuids::uuid const NETWORK_ID = { {
-        0x12 ,0x30, 0xF1, 0x71 , 0x61, 0x04 , 0x41, 0x61, 0x17, 0x31, 0x00, 0x82, 0x16, 0xA1, 0xA1, 0x12
-      } }; // Bender's daydream
+    boost::uuids::uuid const NETWORK_ID = {{
+      0x12 ,0x30, 0xF1, 0x71 , 0x61, 0x04 , 0x41, 0x61, 0x17, 0x31, 0x00, 0x82, 0x16, 0xA1, 0xA1, 0x12
+    }}; // Bender's daydream
     std::string const GENESIS_TX =
               "01"
               "3c"
@@ -325,7 +326,6 @@ namespace config
               "21"
               "01"
               "7f33f2165a74f0aede8a9d2ca2ac98439674afdf2f9631cf9d10939cd786704c";
-    
     uint32_t const GENESIS_NONCE = 10002;
   }
 }

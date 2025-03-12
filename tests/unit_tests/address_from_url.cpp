@@ -1,5 +1,4 @@
-// Copyright (c) 2014-2023, The Monero Project
-// Copyright (c) 2021-2023, Haku Labs MTÜ
+// Copyright (c) 2014-2022, The Scala Project
 // 
 // All rights reserved.
 // 
@@ -38,7 +37,7 @@
 
 TEST(AddressFromTXT, Success)
 {
-  std::string addr = "SvkzckfVpUSWuSG4VS4WCL9KMTh39krgk6SLwVGLkZufh83ET8JjZ3yidaoURyHgLFDhFZEPPY12cHqYySVoV2x62XvMtJii5";
+  std::string addr = "46BeWrHpwXmHDpDEUmZBWZfoQpdc6HaERCNmx1pEYL2rAcuwufPN9rXHHtyUA4QVy66qeFQkn6sfK8aHYjA3jk3o1Bv16em";
 
   std::string txtr = "oa1:xla";
   txtr += " recipient_address=";
@@ -59,7 +58,7 @@ TEST(AddressFromTXT, Success)
 
   EXPECT_STREQ(addr.c_str(), res.c_str());
 
-  std::string txtr3 = "foobar oa1:xla tx_description=\"Donation for scala Development Fund\"; ";
+  std::string txtr3 = "foobar oa1:xla tx_description=\"Donation for Scala Development Fund\"; ";
   txtr3 += "recipient_address=";
   txtr3 += addr;
   txtr3 += "; foobar";
@@ -85,11 +84,11 @@ TEST(AddressFromTXT, Failure)
 
 TEST(AddressFromURL, Success)
 {
-  const std::string addr = scala_DONATION_ADDR;
+  const std::string addr = SCALA_DONATION_ADDR;
   
   bool dnssec_result = false;
 
-  std::vector<std::string> addresses = tools::dns_utils::addresses_from_url("donate.scalaproject.io", dnssec_result);
+  std::vector<std::string> addresses = tools::dns_utils::addresses_from_url("donate.getscala.org", dnssec_result);
 
   EXPECT_EQ(1, addresses.size());
   if (addresses.size() == 1)

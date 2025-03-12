@@ -1,5 +1,4 @@
-# Copyright (c) 2014-2023, The Monero Project
-# Copyright (c) 2021-2023, Haku Labs MTÜ
+# Copyright (c) 2014-2022, The Scala Project
 # 
 # All rights reserved.
 # 
@@ -29,7 +28,7 @@
 # 
 # Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
-set(scala_WALLET_CRYPTO_BENCH "auto" CACHE STRING "Select wallet crypto libraries for benchmarking")
+set(SCALA_WALLET_CRYPTO_BENCH "auto" CACHE STRING "Select wallet crypto libraries for benchmarking")
 
 # The docs say this only affects grouping in IDEs
 set(folder "tests")
@@ -73,14 +72,8 @@ else ()
   include_directories(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/gtest/include")
 endif (GTest_FOUND)
 
-file(COPY
-  data/wallet_9svHk1.keys
-  data/wallet_9svHk1
-  data/outputs
-  data/unsigned_scala_tx
-  data/signed_scala_tx
-  data/sha256sum
-  DESTINATION data)
+message(STATUS "Copying test data directory...")
+file(COPY data DESTINATION .) # Copy data directory from source root to build root
 
 if (CMAKE_BUILD_TYPE STREQUAL "fuzz" OR OSSFUZZ)
   add_subdirectory(fuzz)
@@ -130,32 +123,32 @@ add_test(
 #
 # Configure wallet crypto benchmark
 #
-if (${scala_WALLET_CRYPTO_BENCH} STREQUAL "auto")
-  set(scala_WALLET_CRYPTO_BENCH "cn")
-  scala_crypto_autodetect(AVAILABLE BEST)
+if (${SCALA_WALLET_CRYPTO_BENCH} STREQUAL "auto")
+  set(SCALA_WALLET_CRYPTO_BENCH "cn")
+  monero_crypto_autodetect(AVAILABLE BEST)
   if (DEFINED AVAILABLE)
-    list(APPEND scala_WALLET_CRYPTO_BENCH ${AVAILABLE})
+    list(APPEND SCALA_WALLET_CRYPTO_BENCH ${AVAILABLE})
   endif ()
-  message("Wallet crypto bench is using ${scala_WALLET_CRYPTO_BENCH}")
+  message("Wallet crypto bench is using ${SCALA_WALLET_CRYPTO_BENCH}")
 endif ()
 
-list(REMOVE_DUPLICATES scala_WALLET_CRYPTO_BENCH)
-list(REMOVE_ITEM scala_WALLET_CRYPTO_BENCH "cn") # always used for comparison
-set(scala_WALLET_CRYPTO_BENCH_NAMES "(cn)")
-foreach(BENCH IN LISTS scala_WALLET_CRYPTO_BENCH)
-  scala_crypto_valid(${BENCH} VALID)
+list(REMOVE_DUPLICATES SCALA_WALLET_CRYPTO_BENCH)
+list(REMOVE_ITEM SCALA_WALLET_CRYPTO_BENCH "cn") # always used for comparison
+set(SCALA_WALLET_CRYPTO_BENCH_NAMES "(cn)")
+foreach(BENCH IN LISTS SCALA_WALLET_CRYPTO_BENCH)
+  monero_crypto_valid(${BENCH} VALID)
   if (NOT VALID)
-    message(FATAL_ERROR "Invalid scala_WALLET_CRYPTO_BENCH option ${BENCH}")
+    message(FATAL_ERROR "Invalid SCALA_WALLET_CRYPTO_BENCH option ${BENCH}")
   endif ()
 
-  scala_crypto_get_target(${BENCH} BENCH_LIBRARY)
+  monero_crypto_get_target(${BENCH} BENCH_LIBRARY)
   list(APPEND BENCH_OBJECTS $<TARGET_OBJECTS:${BENCH_LIBRARY}>)
 
-  scala_crypto_get_namespace(${BENCH} BENCH_NAMESPACE)
-  set(scala_WALLET_CRYPTO_BENCH_NAMES "${scala_WALLET_CRYPTO_BENCH_NAMES}(${BENCH_NAMESPACE})")
+  monero_crypto_get_namespace(${BENCH} BENCH_NAMESPACE)
+  set(SCALA_WALLET_CRYPTO_BENCH_NAMES "${SCALA_WALLET_CRYPTO_BENCH_NAMES}(${BENCH_NAMESPACE})")
 endforeach ()
 
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/benchmark.h.in" "${scala_GENERATED_HEADERS_DIR}/tests/benchmark.h")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/benchmark.h.in" "${SCALA_GENERATED_HEADERS_DIR}/tests/benchmark.h")
 scala_add_minimal_executable(scala-wallet-crypto-bench benchmark.cpp ${BENCH_OBJECTS})
 target_link_libraries(scala-wallet-crypto-bench cncrypto)
 

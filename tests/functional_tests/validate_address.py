@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2019-2023, The scala Project
+# Copyright (c) 2019-2022, The Scala Project
 # 
 # All rights reserved.
 # 

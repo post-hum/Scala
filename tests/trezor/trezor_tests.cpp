@@ -1,5 +1,4 @@
-// Copyright (c) 2014-2023, The Monero Project
-// Copyright (c) 2021-2023, Haku Labs MTÜ
+// Copyright (c) 2014-2022, The Scala Project
 // 
 // All rights reserved.
 // 
@@ -138,10 +137,10 @@ int main(int argc, char* argv[])
     hw::register_device(HW_TREZOR_NAME, ensure_trezor_test_device());  // shim device for call tracking
 
     // Bootstrapping common chain & accounts
-    const uint8_t initial_hf =  (uint8_t)get_env_long("TEST_MIN_HF", HF_VERSION_BULLETPROOF_PLUS);
-    const uint8_t max_hf = (uint8_t)get_env_long("TEST_MAX_HF", HF_VERSION_BULLETPROOF_PLUS);
+    const uint8_t initial_hf =  (uint8_t)get_env_long("TEST_MIN_HF", HF_VERSION_CLSAG);
+    const uint8_t max_hf = (uint8_t)get_env_long("TEST_MAX_HF", HF_VERSION_CLSAG);
     auto sync_test = get_env_long("TEST_KI_SYNC", 1);
-    MINFO("Test versions " << scala_RELEASE_NAME << "' (v" << scala_VERSION_FULL << ")");
+    MINFO("Test versions " << SCALA_RELEASE_NAME << "' (v" << SCALA_VERSION_FULL << ")");
     MINFO("Testing hardforks [" << (int)initial_hf << ", " << (int)max_hf << "], sync-test: " << sync_test);
 
     cryptonote::core core_obj(nullptr);
@@ -1026,8 +1025,7 @@ void gen_trezor_base::test_trezor_tx(std::vector<test_event_entry>& events, std:
   for(auto &ptx : ptxs) {
     txs.txes.push_back(get_construction_data_with_decrypted_short_payment_id(ptx, *m_trezor));
   }
-  const auto transfers = wallet_accessor_test::get_transfers(m_wl_alice.get());
-  txs.transfers = std::make_tuple(0, transfers.size(), transfers);
+  txs.transfers = std::make_pair(0, wallet_accessor_test::get_transfers(m_wl_alice.get()));
 
   auto dev_cold = dynamic_cast<::hw::device_cold*>(m_trezor);
   CHECK_AND_ASSERT_THROW_MES(dev_cold, "Device does not implement cold signing interface");
@@ -1057,10 +1055,7 @@ void gen_trezor_base::test_trezor_tx(std::vector<test_event_entry>& events, std:
     CHECK_AND_ASSERT_THROW_MES(resy, "Trezor tx_1 Nonsemantics failed");
 
     tx_list.push_back(c_ptx.tx);
-    const crypto::hash txhash = cryptonote::get_transaction_hash(c_ptx.tx);
     MDEBUG("Transaction: " << dump_data(c_ptx.tx));
-    MDEBUG("Transaction hash: " << epee::string_tools::pod_to_hex(txhash));
-    MDEBUG("Serialized transaction: " << epee::string_tools::buff_to_hex_nodelimer(tx_to_blob(c_ptx.tx)));
   }
 
   add_transactions_to_events(events, generator, tx_list);
@@ -1389,9 +1384,7 @@ tsx_builder * tsx_builder::add_destination(const tools::wallet2 * wallet, bool i
 
 tsx_builder * tsx_builder::set_integrated(size_t idx)
 {
-  CHECK_AND_ASSERT_THROW_MES(m_destinations_orig.size() > idx, "Destination size not big enough to set integrated flag");
   m_integrated.insert(idx);
-  m_destinations_orig[idx].is_integrated = true;
   return this;
 }
 
@@ -1458,7 +1451,7 @@ tsx_builder * tsx_builder::construct_pending_tx(tools::wallet2::pending_tx &ptx,
   auto change_addr = m_from->get_account().get_keys().m_account_address;
   bool r = construct_tx_and_get_tx_key(m_from->get_account().get_keys(), subaddresses, m_sources, destinations_copy,
                                        change_addr, extra ? extra.get() : std::vector<uint8_t>(), tx, 0, tx_key,
-                                       additional_tx_keys, true, m_rct_config, this->m_tester->cur_hf() >= HF_VERSION_VIEW_TAGS);
+                                       additional_tx_keys, true, m_rct_config, nullptr);
   CHECK_AND_ASSERT_THROW_MES(r, "Transaction construction failed");
 
   // Selected transfers permutation
@@ -1929,31 +1922,26 @@ bool wallet_api_tests::generate(std::vector<test_event_entry>& events)
   init();
   test_setup(events);
   const std::string wallet_path = (m_wallet_dir / "wallet").string();
-  const auto api_net_type = m_network_type == TESTNET ? scala::TESTNET : scala::MAINNET;
+  const auto api_net_type = m_network_type == TESTNET ? Scala::TESTNET : Scala::MAINNET;
 
-  scala::WalletManager *wmgr = scala::WalletManagerFactory::getWalletManager();
-  std::unique_ptr<scala::Wallet> w{wmgr->createWalletFromDevice(wallet_path, "", api_net_type, m_trezor_path, 1)};
+  Scala::WalletManager *wmgr = Scala::WalletManagerFactory::getWalletManager();
+  std::unique_ptr<Scala::Wallet> w{wmgr->createWalletFromDevice(wallet_path, "", api_net_type, m_trezor_path, 1)};
   CHECK_AND_ASSERT_THROW_MES(w->init(daemon()->rpc_addr(), 0), "Wallet init fail");
-
-  auto walletImpl = dynamic_cast<scala::WalletImpl *>(w.get());
-  CHECK_AND_ASSERT_THROW_MES(walletImpl, "Dynamic wallet cast failed");
-  WalletApiAccessorTest::allow_mismatched_daemon_version(walletImpl, true);
-
   CHECK_AND_ASSERT_THROW_MES(w->refresh(), "Refresh fail");
   uint64_t balance = w->balance(0);
   MDEBUG("Balance: " << balance);
-  CHECK_AND_ASSERT_THROW_MES(w->status() == scala::PendingTransaction::Status_Ok, "Status nok, " << w->errorString());
+  CHECK_AND_ASSERT_THROW_MES(w->status() == Scala::PendingTransaction::Status_Ok, "Status nok, " << w->errorString());
 
   auto addr = get_address(m_eve_account);
   auto recepient_address = cryptonote::get_account_address_as_str(m_network_type, false, addr);
-  scala::PendingTransaction * transaction = w->createTransaction(recepient_address,
+  Scala::PendingTransaction * transaction = w->createTransaction(recepient_address,
                                                                   "",
                                                                   MK_COINS(10),
                                                                   num_mixin(),
-                                                                  scala::PendingTransaction::Priority_Medium,
+                                                                  Scala::PendingTransaction::Priority_Medium,
                                                                   0,
                                                                   std::set<uint32_t>{});
-  CHECK_AND_ASSERT_THROW_MES(transaction->status() == scala::PendingTransaction::Status_Ok, "Status nok: " << transaction->status() << ", msg: " << transaction->errorString());
+  CHECK_AND_ASSERT_THROW_MES(transaction->status() == Scala::PendingTransaction::Status_Ok, "Status nok: " << transaction->status() << ", msg: " << transaction->errorString());
   w->refresh();
 
   CHECK_AND_ASSERT_THROW_MES(w->balance(0) == balance, "Err");

@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023, The scala Project
+// Copyright (c) 2020-2022, The Scala Project
 
 //
 // All rights reserved.
@@ -60,8 +60,8 @@
 
 #include "crypto/crypto.h"
 #include "cryptonote_basic/cryptonote_basic.h"
-#include "scala/crypto/amd64-64-24k.h"
-#include "scala/crypto/amd64-51-30k.h"
+#include "monero/crypto/amd64-64-24k.h"
+#include "monero/crypto/amd64-51-30k.h"
 
 #define CHECK(...)                           \
     if(!( __VA_ARGS__ ))                      \
@@ -81,7 +81,7 @@
     }
 
 #define CRYPTO_FUNCTION(library, func)                        \
-    BOOST_PP_CAT(BOOST_PP_CAT(scala_crypto_, library), func)
+    BOOST_PP_CAT(BOOST_PP_CAT(monero_crypto_, library), func)
 
 #define CRYPTO_BENCHMARK(r, _, library)                                                                                                                                  \
     struct library                                                                                                                                                       \

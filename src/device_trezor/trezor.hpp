@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2023, The scala Project
+// Copyright (c) 2017-2022, The Scala Project
 //
 // All rights reserved.
 //
@@ -27,8 +27,8 @@
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef scala_TREZOR_HPP
-#define scala_TREZOR_HPP
+#ifndef SCALA_TREZOR_HPP
+#define SCALA_TREZOR_HPP
 
 #include "trezor/trezor_defs.hpp"
 
@@ -41,4 +41,4 @@
 #include "trezor/protocol.hpp"
 #endif
 
-#endif //scala_TREZOR_HPP
+#endif //SCALA_TREZOR_HPP

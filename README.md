@@ -1,18 +1,7 @@
 # Scala
 
-Copyright (c) 2021-2023, Haku Labs MTÜ
-
-Copyright (c) 2014-2023, The Monero Project
-
+Copyright (c) 2014-2022 The Scala Project.  
 Portions Copyright (c) 2012-2013 The Cryptonote developers.
-
-[<img src="https://scalaproject.io/img/card.jpg">](https://scalaproject.io)
-
-Scala is a privacy-focused cryptocurrency project linking distributed technologies to build a globally scalable and mobile-friendly ecosystem. We provide an opaque blockchain, untraceable payments, unlinkable transactions, and blockchain-analysis resistance.
-
-Our vision is to distribute wealth for everyone and every device. We want to be the people’s coin. To achieve this goal, we focus on implementing solutions that are mobile-friendly and energy-efficient. There are about 4 billion mobile devices in the world, and we want to make sure that our ecosystem takes that into account. We also take a lot of time to improve the user experience so that our applications can be used easily by anyone.
-
-Obviously, our goal is also to bring useful utilities and to solve real-world problems, in a way that is economically viable for the project and to sustain our growth. We take advantage of next-gen technologies such as IPFS and custom software to provide the utility of data storage and we use the proven CryptoNote protocol for providing the financial aspects.
 
 ## Table of Contents
 
@@ -20,16 +9,18 @@ Obviously, our goal is also to bring useful utilities and to solve real-world pr
   - [Table of Contents](#table-of-contents)
   - [Development resources](#development-resources)
   - [Vulnerability response](#vulnerability-response)
+  - [Research](#research)
   - [Announcements](#announcements)
   - [Translations](#translations)
+  - [Coverage](#coverage)
   - [Introduction](#introduction)
   - [About this project](#about-this-project)
   - [Supporting the project](#supporting-the-project)
   - [License](#license)
   - [Contributing](#contributing)
-  - [Scheduled software/network upgrades](#scheduled-softwarenetwork-upgrades)
+  - [Scheduled software upgrades](#scheduled-software-upgrades)
   - [Release staging schedule and protocol](#release-staging-schedule-and-protocol)
-  - [Compiling scala from source](#compiling-scala-from-source)
+  - [Compiling Scala from source](#compiling-scala-from-source)
     - [Dependencies](#dependencies)
     - [Cloning the repository](#cloning-the-repository)
     - [Build instructions](#build-instructions)
@@ -43,8 +34,7 @@ Obviously, our goal is also to bring useful utilities and to solve real-world pr
     - [On Solaris:](#on-solaris)
     - [Building portable statically linked binaries](#building-portable-statically-linked-binaries)
     - [Cross Compiling](#cross-compiling)
-    - [Gitian builds](#gitian-builds)
-  - [Installing scala from a package](#installing-scala-from-a-package)
+  - [Installing Scala from a package](#installing-scala-from-a-package)
   - [Running scalad](#running-scalad)
   - [Internationalization](#internationalization)
   - [Using Tor](#using-tor)
@@ -52,7 +42,7 @@ Obviously, our goal is also to bring useful utilities and to solve real-world pr
   - [Pruning](#pruning)
   - [Debugging](#debugging)
     - [Obtaining stack traces and core dumps on Unix systems](#obtaining-stack-traces-and-core-dumps-on-unix-systems)
-      - [To run scala within gdb:](#to-run-scala-within-gdb)
+      - [To run Scala within gdb:](#to-run-scala-within-gdb)
     - [Analysing memory corruption](#analysing-memory-corruption)
       - [ASAN](#asan)
       - [valgrind](#valgrind)
@@ -64,48 +54,86 @@ Obviously, our goal is also to bring useful utilities and to solve real-world pr
 
 ## Development resources
 
-- Web: [scalaproject.io](https://scalaproject.io)
-- Mail: [hello@scalaproject.io](mailto:hello@scalaproject.io)
-- GitHub: [https://github.com/scala-network/](https://github.com/scala-network/)
+- Web: [getscala.org](https://getscala.org)
+- Forum: [forum.getscala.org](https://forum.getscala.org)
+- Mail: [dev@getscala.org](mailto:dev@getscala.org)
+- GitHub: [https://github.com/scala-project/scala](https://github.com/scala-project/scala)
+- IRC: [#scala-dev on Libera](https://web.libera.chat/#scala-dev)
+- It is HIGHLY recommended that you join the #scala-dev IRC channel if you are developing software that uses Scala. Due to the nature of this open source software project, joining this channel and idling is the best way to stay updated on best practices and new developments in the Scala ecosystem. All you need to do is join the IRC channel and idle to stay updated with the latest in Scala development. If you do not, you risk wasting resources on developing integrations that are not compatible with the Scala network. The Scala core team and community continuously make efforts to communicate updates, developments, and documentation via other platforms – but for the best information, you need to talk to other Scala developers, and they are on IRC. #scala-dev is about Scala development, not getting help about using Scala, or help about development of other software, including yours, unless it also pertains to Scala code itself. For these cases, checkout #scala.
 
 ## Vulnerability response
 
-Please contact us privately at [hello@scalaproject.io](mailto:hello@scalaproject.io) to report security issues. 
+- Our [Vulnerability Response Process](https://github.com/scala-project/meta/blob/master/VULNERABILITY_RESPONSE_PROCESS.md) encourages responsible disclosure
+- We are also available via [HackerOne](https://hackerone.com/scala)
+
+## Research
+
+The [Scala Research Lab](https://src.getscala.org/resources/research-lab/) is an open forum where the community coordinates research into Scala cryptography, protocols, fungibility, analysis, and more. We welcome collaboration and contributions from outside researchers! Because not all Lab work and publications are distributed as traditional preprints or articles, they may be easy to miss if you are conducting literature reviews for your own Scala research. You are encouraged to get in touch with the Scala research community if you have questions, wish to collaborate, or would like guidance to help avoid unnecessarily duplicating earlier or known work.
+
+The Scala research community is available on IRC in [#scala-research-lab on Libera](https://web.libera.chat/#scala-research-lab), which is also accessible via Matrix.
 
 ## Announcements
 
-All critical announcements regarding the Scala project will be made on the following outlets:
+- You can subscribe to an [announcement listserv](https://lists.getscala.org) to get critical announcements from the Scala core team. The announcement list can be very helpful for knowing when software updates are needed.
 
-- [Scala Discord](https://chat.scalaproject.io)
-- [Scala Telegram](https://t.me/scalaofficial)
+## Translations
+The CLI wallet is available in different languages. If you want to help translate it, see our self-hosted localization platform, Weblate, on [translate.getscala.org]( https://translate.getscala.org/projects/scala/cli-wallet/). Every translation *must* be uploaded on the platform, pull requests directly editing the code in this repository will be closed. If you need help with Weblate, you can find a guide with screenshots [here](https://github.com/scala-ecosystem/scala-translations/blob/master/weblate.md).
+&nbsp;
+
+If you need help/support/info about translations, contact the localization workgroup. You can find the complete list of contacts on the repository of the workgroup: [scala-translations](https://github.com/scala-ecosystem/scala-translations#contacts).
+
+## Coverage
+
+| Type      | Status |
+|-----------|--------|
+| Coverity  | [![Coverity Status](https://scan.coverity.com/projects/9657/badge.svg)](https://scan.coverity.com/projects/9657/)
+| OSS Fuzz  | [![Fuzzing Status](https://oss-fuzz-build-logs.storage.googleapis.com/badges/scala.svg)](https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:scala)
+| Coveralls | [![Coveralls Status](https://coveralls.io/repos/github/scala-project/scala/badge.svg?branch=master)](https://coveralls.io/github/scala-project/scala?branch=master)
+| License   | [![License](https://img.shields.io/badge/license-BSD3-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 ## Introduction
 
 Scala is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.
 
-**Privacy:** scala uses a cryptographically sound system to allow you to send and receive funds without your transactions being easily revealed on the blockchain (the ledger of transactions that everyone has). This ensures that your purchases, receipts, and all transfers remain private by default.
+**Privacy:** Scala uses a cryptographically sound system to allow you to send and receive funds without your transactions being easily revealed on the blockchain (the ledger of transactions that everyone has). This ensures that your purchases, receipts, and all transfers remain private by default.
 
 **Security:** Using the power of a distributed peer-to-peer consensus network, every transaction on the network is cryptographically secured. Individual wallets have a 25-word mnemonic seed that is only displayed once and can be written down to backup the wallet. Wallet files should be encrypted with a strong passphrase to ensure they are useless if ever stolen.
 
-**Untraceability:** By taking advantage of ring signatures, a special property of a certain type of cryptography, scala is able to ensure that transactions are not only untraceable but have an optional measure of ambiguity that ensures that transactions cannot easily be tied back to an individual user or computer.
+**Untraceability:** By taking advantage of ring signatures, a special property of a certain type of cryptography, Scala is able to ensure that transactions are not only untraceable but have an optional measure of ambiguity that ensures that transactions cannot easily be tied back to an individual user or computer.
 
-**Decentralization:** The utility of scala depends on its decentralised peer-to-peer consensus network - anyone should be able to run the scala software, validate the integrity of the blockchain, and participate in all aspects of the scala network using consumer-grade commodity hardware. Decentralization of the scala network is maintained by software development that minimizes the costs of running the scala software and inhibits the proliferation of specialized, non-commodity hardware.
+**Decentralization:** The utility of Scala depends on its decentralised peer-to-peer consensus network - anyone should be able to run the scala software, validate the integrity of the blockchain, and participate in all aspects of the scala network using consumer-grade commodity hardware. Decentralization of the scala network is maintained by software development that minimizes the costs of running the scala software and inhibits the proliferation of specialized, non-commodity hardware.
 
 ## About this project
 
-This is the core implementation of scala. It is open source and completely free to use without restrictions, except for those specified in the license agreement below. There are no restrictions on anyone creating an alternative implementation of scala that uses the protocol and network in a compatible manner.
+This is the core implementation of Scala. It is open source and completely free to use without restrictions, except for those specified in the license agreement below. There are no restrictions on anyone creating an alternative implementation of Scala that uses the protocol and network in a compatible manner.
 
 As with many development projects, the repository on GitHub is considered to be the "staging" area for the latest changes. Before changes are merged into that branch on the main repository, they are tested by individual developers in their own branches, submitted as a pull request, and then subsequently tested by contributors who focus on testing and code reviews. That having been said, the repository should be carefully considered before using it in a production environment, unless there is a patch in the repository for a particular show-stopping issue you are experiencing. It is generally a better idea to use a tagged release for stability.
 
-**Anyone is welcome to contribute to scala's codebase!** If you have a fix or code change, feel free to submit it as a pull request directly to the "master" branch. In cases where the change is relatively small or does not affect other parts of the codebase, it may be merged in immediately by any one of the collaborators. On the other hand, if the change is particularly large or complex, it is expected that it will be discussed at length either well in advance of the pull request being submitted, or even directly on the pull request.
+**Anyone is welcome to contribute to Scala's codebase!** If you have a fix or code change, feel free to submit it as a pull request directly to the "master" branch. In cases where the change is relatively small or does not affect other parts of the codebase, it may be merged in immediately by any one of the collaborators. On the other hand, if the change is particularly large or complex, it is expected that it will be discussed at length either well in advance of the pull request being submitted, or even directly on the pull request.
 
 ## Supporting the project
 
-For information on how scala funds its development, please read [this](https://wiki.scalaproject.io/general/funding) on our wiki.
+Scala is a 100% community-sponsored endeavor. If you want to join our efforts, the easiest thing you can do is support the project financially. Both Scala and Bitcoin donations can be made to **donate.getscala.org** if using a client that supports the [OpenAlias](https://openalias.org) standard. Alternatively, you can send XLA to the Scala donation address via the `donate` command (type `help` in the command-line wallet for details).
 
-Core development funding and/or some supporting services are also graciously provided by sponsors:
+The Scala donation address is:  
+`888tNkZrPN6JsEgekjMnABU4TBzc2Dt29EPAvkRxbANsAnjyPbb3iQ1YBRk1UXcdRsiKc9dhwMVgN5S9cQUiyoogDavup3H`  
+Viewkey:  
+`f359631075708155cc3d92a32b75a7d02a5dcf27756707b47a2b31b21c389501`  
+Base address for restoring with address and viewkey:
+`44AFFq5kSiGBoZ4NMDwYtN18obc8AemS33DBLWs3H7otXft3XjrpDtQGv7SqSsaBYBb98uNbr2VBBEt7f2wfn3RVGQBEP3A`  
 
-[<img width="150" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png"/>](https://www.jetbrains.com/)
+The Bitcoin donation address is:  
+`1KTexdemPdxSBcG55heUuTjDRYqbC5ZL8H`
+
+Core development funding and/or some supporting services are also graciously provided by [sponsors](https://www.getscala.org/community/sponsorships/):
+
+[<img width="150" src="https://www.getscala.org/img/sponsors/tarilabs.png"/>](https://tarilabs.com/)
+[<img width="150" src="https://www.getscala.org/img/sponsors/globee.png"/>](https://globee.com/)
+[<img width="150" src="https://www.getscala.org/img/sponsors/symas.png"/>](https://symas.com/)
+[<img width="150" src="https://www.getscala.org/img/sponsors/forked_logo.png"/>](http://www.forked.net/)
+[<img width="150" src="https://www.getscala.org/img/sponsors/macstadium.png"/>](https://www.macstadium.com/)
+
+There are also several mining pools that kindly donate a portion of their fees, [a list of them can be found on our Bitcointalk post](https://bitcointalk.org/index.php?topic=583449.0).
 
 ## License
 
@@ -115,17 +143,30 @@ See [LICENSE](LICENSE).
 
 If you want to help out, see [CONTRIBUTING](docs/CONTRIBUTING.md) for a set of guidelines.
 
-## Scheduled software/network upgrades
+## Scheduled software upgrades
 
-scala uses a scheduled software/network upgrade (hard fork) mechanism to implement new features into the scala software and network. This means that users of scala (end users and service providers) should run current versions and upgrade their software when new releases are available. Software upgrades occur when new features are developed and implemented in the codebase. Network upgrades occur in tandem with software upgrades that modify the consensus rules of the scala network. The required software for network upgrades will be available prior to the scheduled network upgrade date. Please check the repository prior to this date for the proper scala software version. Below is the historical schedule and the projected schedule for the next upgrade.
+Scala uses a fixed-schedule software upgrade (hard fork) mechanism to implement new features. This means that users of Scala (end users and service providers) should run current versions and upgrade their software on a regular schedule. Software upgrades occur during the months of April and October. The required software for these upgrades will be available prior to the scheduled date. Please check the repository prior to this date for the proper Scala software version. Below is the historical schedule and the projected schedule for the next upgrade.
+Dates are provided in the format YYYY-MM-DD.
 
-Dates are provided in the format DD-MM-YYYY. The "Minimum" is the software version that follows the new consensus rules. The "Recommended" version may include bug fixes and other new features that do not affect the consensus rules.
 
-
-| Software upgrade block height | Date      | Fork version | Minimum scala version | Recommended scala version | Details                                                               |
-|-------------------------------|-----------|--------------|-----------------------|---------------------------|-----------------------------------------------------------------------|
-| 1                             | 1-08-2020 | v4.1.0       | v4.1.0                | v7.9.0                    | Genesis block                                                         |
-| X                             | X         | v8.0.0       | v8.0.0                | v8.0.0                    | Diardi V2, multiple proof of work, new bulletproofs, new reward curve |
+| Software upgrade block height  | Date       | Fork version      | Minimum Scala version | Recommended Scala version | Details                                                                            |
+| ------------------------------ | -----------| ----------------- | ---------------------- | -------------------------- | ---------------------------------------------------------------------------------- |
+| 1009827                        | 2016-03-22 | v2                | v0.9.4                 | v0.9.4                     | Allow only >= ringsize 3, blocktime = 120 seconds, fee-free blocksize 60 kb       |
+| 1141317                        | 2016-09-21 | v3                | v0.9.4                 | v0.10.0                    | Splits coinbase into denominations  |
+| 1220516                        | 2017-01-05 | v4                | v0.10.1                | v0.10.2.1                  | Allow normal and RingCT transactions |
+| 1288616                        | 2017-04-15 | v5                | v0.10.3.0              | v0.10.3.1                  | Adjusted minimum blocksize and fee algorithm      |
+| 1400000                        | 2017-09-16 | v6                | v0.11.0.0              | v0.11.0.0                  | Allow only RingCT transactions, allow only >= ringsize 5      |
+| 1546000                        | 2018-04-06 | v7                | v0.12.0.0              | v0.12.3.0                  | Cryptonight variant 1, ringsize >= 7, sorted inputs
+| 1685555                        | 2018-10-18 | v8                | v0.13.0.0              | v0.13.0.4                  | max transaction size at half the penalty free block size, bulletproofs enabled, cryptonight variant 2, fixed ringsize [11](https://youtu.be/KOO5S4vxi0o)
+| 1686275                        | 2018-10-19 | v9                | v0.13.0.0              | v0.13.0.4                  | bulletproofs required
+| 1788000                        | 2019-03-09 | v10               | v0.14.0.0              | v0.14.1.2                  | New PoW based on Cryptonight-R, new block weight algorithm, slightly more efficient RingCT format
+| 1788720                        | 2019-03-10 | v11               | v0.14.0.0              | v0.14.1.2                  | forbid old RingCT transaction format
+| 1978433                        | 2019-11-30 | v12               | v0.15.0.0              | v0.16.0.0                  | New PoW based on RandomX, only allow >= 2 outputs, change to the block median used to calculate penalty, v1 coinbases are forbidden, rct sigs in coinbase forbidden, 10 block lock time for incoming outputs
+| 2210000                        | 2020-10-17 | v13               | v0.17.0.0              | v0.17.3.2                  | New CLSAG transaction format
+| 2210720                        | 2020-10-18 | v14               | v0.17.1.1              | v0.17.3.2                  | forbid old MLSAG transaction format
+| 2688888                        | 2022-08-13 | v15               | v0.18.0.0              | v0.18.3.4                  | ringsize = 16, bulletproofs+, view tags, adjusted dynamic block weight algorithm
+| 2689608                        | 2022-08-14 | v16               | v0.18.0.0              | v0.18.3.4                  | forbid old v14 transaction format
+| XXXXXXX                        | XXX-XX-XX | XXX                | vX.XX.X.X              | vX.XX.X.X                  | XXX |
 
 X's indicate that these details have not been determined as of commit date.
 
@@ -135,7 +176,7 @@ X's indicate that these details have not been determined as of commit date.
 
 Approximately three months prior to a scheduled software upgrade, a branch from master will be created with the new release version tag. Pull requests that address bugs should then be made to both master and the new release branch. Pull requests that require extensive review and testing (generally, optimizations and new features) should *not* be made to the release branch.
 
-## Compiling scala from source
+## Compiling Scala from source
 
 ### Dependencies
 
@@ -154,11 +195,11 @@ library archives (`.a`).
 | CMake        | 3.5           | NO       | `cmake`              | `cmake`      | `cmake`            | `cmake`             | NO       |                 |
 | pkg-config   | any           | NO       | `pkg-config`         | `base-devel` | `base-devel`       | `pkgconf`           | NO       |                 |
 | Boost        | 1.58          | NO       | `libboost-all-dev`   | `boost`      | `boost-devel`      | `boost-devel`       | NO       | C++ libraries   |
-| OpenSSL      | basically any | NO       | `libssl-dev`         | `openssl`    | `openssl-devel`    | `openssl-devel`     | NO       | sha256 sum      |
+| OpenSSL      | basically any | NO       | `libssl-dev`         | `openssl`    | `libressl-devel`   | `openssl-devel`     | NO       | sha256 sum      |
 | libzmq       | 4.2.0         | NO       | `libzmq3-dev`        | `zeromq`     | `zeromq-devel`     | `zeromq-devel`      | NO       | ZeroMQ library  |
 | OpenPGM      | ?             | NO       | `libpgm-dev`         | `libpgm`     |                    | `openpgm-devel`     | NO       | For ZeroMQ      |
 | libnorm[2]   | ?             | NO       | `libnorm-dev`        |              |                    |                     | YES      | For ZeroMQ      |
-| libunbound   | 1.4.16        | NO       | `libunbound-dev`     | `unbound`    | `unbound-devel`    | `unbound-devel`     | NO       | DNS resolver    |
+| libunbound   | 1.4.16        | YES      | `libunbound-dev`     | `unbound`    | `unbound-devel`    | `unbound-devel`     | NO       | DNS resolver    |
 | libsodium    | ?             | NO       | `libsodium-dev`      | `libsodium`  | `libsodium-devel`  | `libsodium-devel`   | NO       | cryptography    |
 | libunwind    | any           | NO       | `libunwind8-dev`     | `libunwind`  | `libunwind-devel`  | `libunwind-devel`   | YES      | Stack traces    |
 | liblzma      | any           | NO       | `liblzma-dev`        | `xz`         | `liblzma-devel`    | `xz-devel`          | YES      | For libunwind   |
@@ -225,7 +266,7 @@ pkg install git gmake cmake pkgconf boost-libs libzmq4 libsodium unbound
 Clone recursively to pull-in needed submodule(s):
 
 ```
-git clone --recursive https://github.com/scala-network/scala
+git clone --recursive https://github.com/scala-project/scala
 ```
 
 If you already have a repo cloned, initialize and update:
@@ -240,7 +281,7 @@ to build successfully.
 
 ### Build instructions
 
-scala uses the CMake build system and a top-level [Makefile](Makefile) that
+Scala uses the CMake build system and a top-level [Makefile](Makefile) that
 invokes cmake commands as needed.
 
 #### On Linux and macOS
@@ -250,6 +291,7 @@ invokes cmake commands as needed.
 
     ```bash
     cd scala
+    git checkout release-v0.18
     make
     ```
 
@@ -259,7 +301,7 @@ invokes cmake commands as needed.
     available per thread.
 
     *Note*: The instructions above will compile the most stable release of the
-    scala software. If you would like to use and test the most recent software,
+    Scala software. If you would like to use and test the most recent software,
     use `git checkout master`. The master branch may contain updates that are
     both unstable and incompatible with release software, though testing is always
     encouraged.
@@ -268,7 +310,7 @@ invokes cmake commands as needed.
 
 * Add `PATH="$PATH:$HOME/scala/build/release/bin"` to `.profile`
 
-* Run scala with `scalad --detach`
+* Run Scala with `scalad --detach`
 
 * **Optional**: build and run the test suite to verify the binaries:
 
@@ -298,7 +340,7 @@ Dependencies need to be built with -fPIC. Static libraries usually aren't, so yo
     HAVE_DOT=YES doxygen Doxyfile
     ```
 
-* **Optional**: use ccache not to rebuild translation units, that haven't really changed. scala's CMakeLists.txt file automatically handles it
+* **Optional**: use ccache not to rebuild translation units, that haven't really changed. Scala's CMakeLists.txt file automatically handles it
 
     ```bash
     sudo apt install ccache
@@ -310,7 +352,7 @@ Tested on a Raspberry Pi Zero with a clean install of minimal Raspbian Stretch (
 
 * `apt-get update && apt-get upgrade` to install all of the latest software
 
-* Install the dependencies for scala from the 'Debian' column in the table above.
+* Install the dependencies for Scala from the 'Debian' column in the table above.
 
 * Increase the system swap size:
 
@@ -323,12 +365,12 @@ Tested on a Raspberry Pi Zero with a clean install of minimal Raspbian Stretch (
 
 * If using an external hard disk without an external power supply, ensure it gets enough power to avoid hardware issues when syncing, by adding the line "max_usb_current=1" to /boot/config.txt
 
-* Clone scala and checkout the most recent release version:
+* Clone Scala and checkout the most recent release version:
 
     ```bash
-    git clone https://github.com/scala-network/scala.git
+    git clone https://github.com/scala-project/scala.git
     cd scala
-    git checkout v0.18.1.2
+    git checkout v0.18.3.4
     ```
 
 * Build:
@@ -345,13 +387,13 @@ Tested on a Raspberry Pi Zero with a clean install of minimal Raspbian Stretch (
 
 * Run `source $HOME/.profile`
 
-* Run scala with `scalad --detach`
+* Run Scala with `scalad --detach`
 
 * You may wish to reduce the size of the swap file after the build has finished, and delete the boost directory from your home directory
 
 #### *Note for Raspbian Jessie users:*
 
-If you are using the older Raspbian Jessie image, compiling scala is a bit more complicated. The version of Boost available in the Debian Jessie repositories is too old to use with scala, and thus you must compile a newer version yourself. The following explains the extra steps and has been tested on a Raspberry Pi 2 with a clean install of minimal Raspbian Jessie.
+If you are using the older Raspbian Jessie image, compiling Scala is a bit more complicated. The version of Boost available in the Debian Jessie repositories is too old to use with Scala, and thus you must compile a newer version yourself. The following explains the extra steps and has been tested on a Raspberry Pi 2 with a clean install of minimal Raspbian Jessie.
 
 * As before, `apt-get update && apt-get upgrade` to install all of the latest software, and increase the system swap size
 
@@ -363,7 +405,7 @@ If you are using the older Raspbian Jessie image, compiling scala is a bit more 
     ```
 
 
-* Then, install the dependencies for scala except for `libunwind` and `libboost-all-dev`
+* Then, install the dependencies for Scala except for `libunwind` and `libboost-all-dev`
 
 * Install the latest version of boost (this may first require invoking `apt-get remove --purge libboost*-dev` to remove a previous version if you're not using a clean install):
 
@@ -384,7 +426,7 @@ If you are using the older Raspbian Jessie image, compiling scala is a bit more 
 
 * Wait ~4 hours
 
-* From here, follow the [general Raspberry Pi instructions](#on-the-raspberry-pi) from the "Clone scala and checkout most recent release version" step.
+* From here, follow the [general Raspberry Pi instructions](#on-the-raspberry-pi) from the "Clone Scala and checkout most recent release version" step.
 
 #### On Windows:
 
@@ -436,7 +478,7 @@ application.
 * To git clone, run:
 
     ```bash
-    git clone --recursive https://github.com/scala-network/scala.git
+    git clone --recursive https://github.com/scala-project/scala.git
     ```
 
 **Building**
@@ -447,10 +489,10 @@ application.
     cd scala
     ```
 
-* If you would like a specific [version/tag](https://github.com/scala-network/scala/tags), do a git checkout for that version. eg. 'v0.18.1.2'. If you don't care about the version and just want binaries from master, skip this step:
+* If you would like a specific [version/tag](https://github.com/scala-project/scala/tags), do a git checkout for that version. eg. 'v0.18.3.4'. If you don't care about the version and just want binaries from master, skip this step:
 
     ```bash
-    git checkout v0.18.1.2
+    git checkout v0.18.3.4
     ```
 
 * If you are on a 64-bit system, run:
@@ -484,20 +526,20 @@ application.
 ### On FreeBSD:
 
 The project can be built from scratch by following instructions for Linux above(but use `gmake` instead of `make`). 
-If you are running scala in a jail, you need to add `sysvsem="new"` to your jail configuration, otherwise lmdb will throw the error message: `Failed to open lmdb environment: Function not implemented`.
+If you are running Scala in a jail, you need to add `sysvsem="new"` to your jail configuration, otherwise lmdb will throw the error message: `Failed to open lmdb environment: Function not implemented`.
 
-scala is also available as a port or package as `scala-cli`.
+Scala is also available as a port or package as `scala-cli`.
 
 ### On OpenBSD:
 
-You will need to add a few packages to your system. `pkg_add cmake gmake zeromq libiconv boost libunbound`.
+You will need to add a few packages to your system. `pkg_add cmake gmake zeromq libiconv boost`.
 
 The `doxygen` and `graphviz` packages are optional and require the xbase set.
-Running the test suite also requires `py3-requests` package.
+Running the test suite also requires `py-requests` package.
 
-Build scala: `gmake`
+Build scala: `env DEVELOPER_LOCAL_TOOLS=1 BOOST_ROOT=/usr/local gmake release-static`
 
-Note: you may encounter the following error when compiling the latest version of scala as a normal user:
+Note: you may encounter the following error when compiling the latest version of Scala as a normal user:
 
 ```
 LLVM ERROR: out of memory
@@ -546,8 +588,6 @@ You can also cross-compile static binaries on Linux for Windows and macOS with t
 * ```make depends target=x86_64-linux-gnu``` for 64-bit linux binaries.
 * ```make depends target=x86_64-w64-mingw32``` for 64-bit windows binaries.
   * Requires: `python3 g++-mingw-w64-x86-64 wine1.6 bc`
-  * You also need to run:  
-```update-alternatives --set x86_64-w64-mingw32-g++ x86_64-w64-mingw32-g++-posix && update-alternatives --set x86_64-w64-mingw32-gcc x86_64-w64-mingw32-gcc-posix```
 * ```make depends target=x86_64-apple-darwin11``` for macOS binaries.
   * Requires: `cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools python-dev`
 * ```make depends target=i686-linux-gnu``` for 32-bit linux binaries.
@@ -568,15 +608,11 @@ You can also cross-compile static binaries on Linux for Windows and macOS with t
 
 The required packages are the names for each toolchain on apt. Depending on your distro, they may have different names. The `depends` system has been tested on Ubuntu 18.04 and 20.04.
 
-Using `depends` might also be easier to compile scala on Windows than using MSYS. Activate Windows Subsystem for Linux (WSL) with a distro (for example Ubuntu), install the apt build-essentials and follow the `depends` steps as depicted above.
+Using `depends` might also be easier to compile Scala on Windows than using MSYS. Activate Windows Subsystem for Linux (WSL) with a distro (for example Ubuntu), install the apt build-essentials and follow the `depends` steps as depicted above.
 
 The produced binaries still link libc dynamically. If the binary is compiled on a current distribution, it might not run on an older distribution with an older installation of libc. Passing `-DBACKCOMPAT=ON` to cmake will make sure that the binary will run on systems having at least libc version 2.17.
 
-### Gitian builds
-
-See [contrib/gitian/README.md](contrib/gitian/README.md).
-
-## Installing scala from a package
+## Installing Scala from a package
 
 **DISCLAIMER: These packages are not part of this repository or maintained by this project's contributors, and as such, do not go through the same review process to ensure their trustworthiness and security.**
 
@@ -611,7 +647,7 @@ More info and versions in the [Debian package tracker](https://tracker.debian.or
     guix package -i scala
     ```
 
-* Gentoo [scala overlay](https://github.com/gentoo-scala/gentoo-scala)
+* Gentoo [Scala overlay](https://github.com/gentoo-scala/gentoo-scala)
 
     ```bash
     emerge --noreplace eselect-repository
@@ -691,7 +727,7 @@ See [README.i18n.md](docs/README.i18n.md).
 > used solely for relaying transactions received over local RPC. This provides
 > privacy and better protection against surrounding node (sybil) attacks.
 
-While scala isn't made to integrate with Tor, it can be used wrapped with torsocks, by
+While Scala isn't made to integrate with Tor, it can be used wrapped with torsocks, by
 setting the following configuration parameters and environment variables:
 
 * `--p2p-bind-ip 127.0.0.1` on the command line or `p2p-bind-ip=127.0.0.1` in
@@ -720,7 +756,7 @@ DNS_PUBLIC=tcp torsocks scalad --p2p-bind-ip 127.0.0.1 --no-igd
 ```
 
 A helper script is in contrib/tor/scala-over-tor.sh. It assumes Tor is installed
-already, and runs Tor and scala with the right configuration.
+already, and runs Tor and Scala with the right configuration.
 
 ### Using Tor on Tails
 
@@ -736,7 +772,7 @@ DNS_PUBLIC=tcp torsocks ./scalad --p2p-bind-ip 127.0.0.1 --no-igd --rpc-bind-ip 
 
 ## Pruning
 
-As of April 2022, the full scala blockchain file is about 130 GB. One can store a pruned blockchain, which is about 45 GB.
+As of April 2022, the full Scala blockchain file is about 130 GB. One can store a pruned blockchain, which is about 45 GB.
 A pruned blockchain can only serve part of the historical chain data to other peers, but is otherwise identical in
 functionality to the full blockchain.
 To use a pruned blockchain, it is best to start the initial sync with `--prune-blockchain`. However, it is also possible
@@ -744,9 +780,11 @@ to prune an existing blockchain using the `scala-blockchain-prune` tool or using
 with an existing chain. If an existing chain exists, pruning will temporarily require disk space to store both the full
 and pruned blockchains.
 
+For more detailed information see the ['Pruning' entry in the Scalapedia](https://www.getscala.org/resources/scalapedia/pruning.html)
+
 ## Debugging
 
-This section contains general instructions for debugging failed installs or problems encountered with scala. First, ensure you are running the latest version built from the GitHub repo.
+This section contains general instructions for debugging failed installs or problems encountered with Scala. First, ensure you are running the latest version built from the GitHub repo.
 
 ### Obtaining stack traces and core dumps on Unix systems
 
@@ -788,7 +826,7 @@ Print the stack trace with `bt`
 coredumpctl -1 gdb
 ```
 
-#### To run scala within gdb:
+#### To run Scala within gdb:
 
 Type `gdb /path/to/scalad`
 
@@ -802,7 +840,7 @@ There are two tools available:
 
 #### ASAN
 
-Configure scala with the -D SANITIZE=ON cmake flag, eg:
+Configure Scala with the -D SANITIZE=ON cmake flag, eg:
 
 ```bash
 cd build/debug && cmake -D SANITIZE=ON -D CMAKE_BUILD_TYPE=Debug ../..

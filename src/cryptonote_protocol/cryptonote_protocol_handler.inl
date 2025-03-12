@@ -2,8 +2,7 @@
 /// @author rfree (current maintainer/user in scala.cc project - most of code is from CryptoNote)
 /// @brief This is the original cryptonote protocol network-events handler, modified by us
 
-// Copyright (c) 2014-2023, The Monero Project
-// Copyright (c) 2021-2023, Haku Labs MTÜ
+// Copyright (c) 2014-2022, The Scala Project
 //
 // All rights reserved.
 //
@@ -45,8 +44,8 @@
 #include "common/pruning.h"
 #include "common/util.h"
 
-#undef scala_DEFAULT_LOG_CATEGORY
-#define scala_DEFAULT_LOG_CATEGORY "net.cn"
+#undef SCALA_DEFAULT_LOG_CATEGORY
+#define SCALA_DEFAULT_LOG_CATEGORY "net.cn"
 
 #define MLOG_P2P_MESSAGE(x) MCINFO("net.p2p.msg", context << x)
 #define MLOGIF_P2P_MESSAGE(init, test, x) \
@@ -61,7 +60,7 @@
   } while(0)
 
 #define MLOG_PEER_STATE(x) \
-  MCINFO(scala_DEFAULT_LOG_CATEGORY, context << "[" << epee::string_tools::to_string_hex(context.m_pruning_seed) << "] state: " << x << " in state " << cryptonote::get_protocol_state_string(context.m_state))
+  MCINFO(SCALA_DEFAULT_LOG_CATEGORY, context << "[" << epee::string_tools::to_string_hex(context.m_pruning_seed) << "] state: " << x << " in state " << cryptonote::get_protocol_state_string(context.m_state))
 
 #define BLOCK_QUEUE_NSPANS_THRESHOLD 10 // chunks of N blocks
 #define BLOCK_QUEUE_SIZE_THRESHOLD (100*1024*1024) // MB
@@ -980,8 +979,18 @@ namespace cryptonote
   int t_cryptonote_protocol_handler<t_core>::handle_notify_new_transactions(int command, NOTIFY_NEW_TRANSACTIONS::request& arg, cryptonote_connection_context& context)
   {
     MLOG_P2P_MESSAGE("Received NOTIFY_NEW_TRANSACTIONS (" << arg.txs.size() << " txes)");
+    std::unordered_set<blobdata> seen;
     for (const auto &blob: arg.txs)
+    {
       MLOGIF_P2P_MESSAGE(cryptonote::transaction tx; crypto::hash hash; bool ret = cryptonote::parse_and_validate_tx_from_blob(blob, tx, hash);, ret, "Including transaction " << hash);
+      if (seen.find(blob) != seen.end())
+      {
+        LOG_PRINT_CCONTEXT_L1("Duplicate transaction in notification, dropping connection");
+        drop_connection(context, false, false);
+        return 1;
+      }
+      seen.insert(blob);
+    }
 
     if(context.m_state != cryptonote_connection_context::state_normal)
       return 1;
@@ -1349,7 +1358,7 @@ namespace cryptonote
     cryptonote::network_type nettype = m_core.get_nettype();
 
     // Don't simply use remaining number of blocks for the estimate but "sync weight" as provided by
-    // "cumulative_block_sync_weight" which knows about strongly varying scala mainnet block sizes
+    // "cumulative_block_sync_weight" which knows about strongly varying Scala mainnet block sizes
     uint64_t synced_weight = tools::cumulative_block_sync_weight(nettype, m_sync_start_height, current_blockchain_height - m_sync_start_height);
     float us_per_weight = (float)sync_time.total_microseconds() / (float)synced_weight;
     uint64_t remaining_weight = tools::cumulative_block_sync_weight(nettype, current_blockchain_height, target_blockchain_height - current_blockchain_height);

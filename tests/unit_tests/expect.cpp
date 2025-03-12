@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023, The scala Project
+// Copyright (c) 2018-2022, The Scala Project
 
 //
 // All rights reserved.
@@ -819,98 +819,98 @@ TEST(Expect, EqualNoCopies)
 TEST(Expect, Macros) {
     EXPECT_TRUE(
         [] () -> ::common_error {
-            scala_PRECOND(true);
+            SCALA_PRECOND(true);
             return {common_error::kInvalidErrorCode};
         } () == common_error::kInvalidErrorCode
     );
     EXPECT_TRUE(
         [] () -> ::common_error {
-            scala_PRECOND(false);
+            SCALA_PRECOND(false);
             return {common_error::kInvalidErrorCode};
         } () == common_error::kInvalidArgument
     );
     EXPECT_TRUE(
         [] () -> std::error_code {
-            scala_PRECOND(true);
+            SCALA_PRECOND(true);
             return {common_error::kInvalidErrorCode};
         } () == common_error::kInvalidErrorCode
     );
     EXPECT_TRUE(
         [] () -> std::error_code {
-            scala_PRECOND(false);
+            SCALA_PRECOND(false);
             return {common_error::kInvalidErrorCode};
         } () == common_error::kInvalidArgument
     );
     EXPECT_TRUE(
         [] () -> expect<void> {
-            scala_PRECOND(true);
+            SCALA_PRECOND(true);
             return {common_error::kInvalidErrorCode};
         } () == common_error::kInvalidErrorCode
     );
     EXPECT_TRUE(
         [] () -> expect<void> {
-            scala_PRECOND(false);
+            SCALA_PRECOND(false);
             return {common_error::kInvalidErrorCode};
         } () == common_error::kInvalidArgument
     );
     EXPECT_TRUE(
         [] () -> expect<int> {
-            scala_PRECOND(true);
+            SCALA_PRECOND(true);
             return {common_error::kInvalidErrorCode};
         } () == common_error::kInvalidErrorCode
     );
     EXPECT_TRUE(
         [] () -> expect<int> {
-            scala_PRECOND(false);
+            SCALA_PRECOND(false);
             return {common_error::kInvalidErrorCode};
         } () == common_error::kInvalidArgument
     );
 
     EXPECT_TRUE(
         [] () -> std::error_code {
-            scala_CHECK(expect<void>{});
+            SCALA_CHECK(expect<void>{});
             return {common_error::kInvalidErrorCode};
         } () == common_error::kInvalidErrorCode
     );
     EXPECT_TRUE(
         [] () -> std::error_code {
-            scala_CHECK(expect<void>{common_error::kInvalidArgument});
+            SCALA_CHECK(expect<void>{common_error::kInvalidArgument});
             return {common_error::kInvalidErrorCode};
         } () == common_error::kInvalidArgument
     );
     EXPECT_TRUE(
         [] () -> expect<void> {
-            scala_CHECK(expect<void>{});
+            SCALA_CHECK(expect<void>{});
             return {common_error::kInvalidErrorCode};
         } () == common_error::kInvalidErrorCode
     );
     EXPECT_TRUE(
         [] () -> expect<void> {
-            scala_CHECK(expect<void>{common_error::kInvalidArgument});
+            SCALA_CHECK(expect<void>{common_error::kInvalidArgument});
             return {common_error::kInvalidErrorCode};
         } () == common_error::kInvalidArgument
     );
     EXPECT_TRUE(
         [] () -> expect<int> {
-            scala_CHECK(expect<void>{});
+            SCALA_CHECK(expect<void>{});
             return {common_error::kInvalidErrorCode};
         } () == common_error::kInvalidErrorCode
     );
     EXPECT_TRUE(
         [] () -> expect<int> {
-            scala_CHECK(expect<void>{common_error::kInvalidArgument});
+            SCALA_CHECK(expect<void>{common_error::kInvalidArgument});
             return {common_error::kInvalidErrorCode};
         } () == common_error::kInvalidArgument
     );
 
-    EXPECT_NO_THROW(scala_UNWRAP(success()));
-    EXPECT_NO_THROW(scala_UNWRAP(expect<void>{}));
-    EXPECT_NO_THROW(scala_UNWRAP(expect<int>{0}));
+    EXPECT_NO_THROW(SCALA_UNWRAP(success()));
+    EXPECT_NO_THROW(SCALA_UNWRAP(expect<void>{}));
+    EXPECT_NO_THROW(SCALA_UNWRAP(expect<int>{0}));
     EXPECT_THROW(
-        scala_UNWRAP(expect<void>{common_error::kInvalidArgument}), std::system_error
+        SCALA_UNWRAP(expect<void>{common_error::kInvalidArgument}), std::system_error
     );
     EXPECT_THROW(
-        scala_UNWRAP(expect<int>{common_error::kInvalidArgument}), std::system_error
+        SCALA_UNWRAP(expect<int>{common_error::kInvalidArgument}), std::system_error
     );
 }
 

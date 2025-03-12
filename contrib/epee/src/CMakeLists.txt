@@ -1,4 +1,4 @@
-# Copyright (c) 2014-2023, The Scala Project
+# Copyright (c) 2014-2022, The Scala Project
 # 
 # All rights reserved.
 # 
@@ -37,6 +37,7 @@ scala_add_library(epee byte_slice.cpp byte_stream.cpp hex.cpp abstract_http_clie
     misc_language.cpp
     file_io_utils.cpp
     net_parse_helpers.cpp
+    http_base.cpp
     ${EPEE_HEADERS_PUBLIC}
     )
 

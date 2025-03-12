@@ -1,5 +1,4 @@
-// Copyright (c) 2014-2023, The Monero Project
-// Copyright (c) 2021-2023, Haku Labs MTÜ
+// Copyright (c) 2014-2022, The Scala Project
 //
 // All rights reserved.
 //
@@ -36,7 +35,7 @@
 
 using namespace std;
 
-namespace scala {
+namespace Scala {
 namespace Utils {
 
 bool isAddressLocal(const std::string &address)

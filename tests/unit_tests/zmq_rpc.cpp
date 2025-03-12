@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023, The scala Project
+// Copyright (c) 2020-2022, The Scala Project
 
 // 
 // All rights reserved.
@@ -79,9 +79,9 @@ namespace
   {
     net::zmq::socket sock{zmq_socket(ctx, ZMQ_PAIR)};
     if (!sock)
-      scala_ZMQ_THROW("failed to create socket");
+      SCALA_ZMQ_THROW("failed to create socket");
     if (zmq_bind(sock.get(), address) != 0)
-      scala_ZMQ_THROW("socket bind failure");
+      SCALA_ZMQ_THROW("socket bind failure");
     return sock;
   }
 
@@ -280,9 +280,9 @@ namespace
         pub(std::make_shared<cryptonote::listener::zmq_pub>(ctx.get()))
     {
       if (!dummy_client)
-        scala_ZMQ_THROW("failed to create socket");
+        SCALA_ZMQ_THROW("failed to create socket");
       if (zmq_connect(dummy_client.get(), inproc_pub) != 0)
-        scala_ZMQ_THROW("failed to connect to dummy pub");
+        SCALA_ZMQ_THROW("failed to connect to dummy pub");
     }
 
     virtual void TearDown() override final
@@ -335,9 +335,9 @@ namespace
 
       sub.reset(zmq_socket(ctx, ZMQ_SUB));
       if (!sub)
-        scala_ZMQ_THROW("failed to create socket");
+        SCALA_ZMQ_THROW("failed to create socket");
       if (zmq_connect(sub.get(), inproc_pub) != 0)
-        scala_ZMQ_THROW("failed to connect to dummy pub");
+        SCALA_ZMQ_THROW("failed to connect to dummy pub");
 
       server.run();
     }
@@ -354,7 +354,7 @@ namespace
     void subscribe(const char (&topic)[N])
     {
       if (zmq_setsockopt(sub.get(), ZMQ_SUBSCRIBE, topic, N - 1) != 0)
-        scala_ZMQ_THROW("failed to subscribe");
+        SCALA_ZMQ_THROW("failed to subscribe");
     }
   };
 }

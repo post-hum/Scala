@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-# Simulate a maximal block attack on the scala network
+# Simulate a maximal block attack on the Scala network
 # This uses the scheme proposed by ArticMine
 # Written by Sarang Nother
-# Copyright (c) 2019-2023, The scala Project
+# Copyright (c) 2019-2022, The Scala Project
 from __future__ import print_function
 import sys
 import math

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #encoding=utf-8
 
-# Copyright (c) 2019-2023, The scala Project
+# Copyright (c) 2019-2022, The Scala Project
 # 
 # All rights reserved.
 # 

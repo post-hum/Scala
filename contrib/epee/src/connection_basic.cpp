@@ -2,7 +2,7 @@
 /// @author rfree (current maintainer in scala.cc project)
 /// @brief base for connection, contains e.g. the ratelimit hooks
 
-// Copyright (c) 2014-2023, The Scala Project
+// Copyright (c) 2014-2022, The Scala Project
 // 
 // All rights reserved.
 // 

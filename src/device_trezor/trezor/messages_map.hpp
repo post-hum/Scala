@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2023, The scala Project
+// Copyright (c) 2017-2022, The Scala Project
 //
 // All rights reserved.
 //
@@ -27,8 +27,8 @@
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef scala_MESSAGES_MAP_H
-#define scala_MESSAGES_MAP_H
+#ifndef SCALA_MESSAGES_MAP_H
+#define SCALA_MESSAGES_MAP_H
 
 #include <string>
 #include <type_traits>
@@ -91,4 +91,4 @@ namespace trezor {
 
 }}
 
-#endif //scala_MESSAGES_MAP_H
+#endif //SCALA_MESSAGES_MAP_H

@@ -1,35 +1,30 @@
-// Copyright (c) 2017-2023, The scala Project
+// Copyright (c) 2017-2022, The Scala Project
 //
 // All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without modification, are
+// permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice,
-// this list of
+// 1. Redistributions of source code must retain the above copyright notice, this list of
 //    conditions and the following disclaimer.
 //
-// 2. Redistributions in binary form must reproduce the above copyright notice,
-// this list
-//    of conditions and the following disclaimer in the documentation and/or
-//    other materials provided with the distribution.
+// 2. Redistributions in binary form must reproduce the above copyright notice, this list
+//    of conditions and the following disclaimer in the documentation and/or other
+//    materials provided with the distribution.
 //
-// 3. Neither the name of the copyright holder nor the names of its contributors
-// may be
-//    used to endorse or promote products derived from this software without
-//    specific prior written permission.
+// 3. Neither the name of the copyright holder nor the names of its contributors may be
+//    used to endorse or promote products derived from this software without specific
+//    prior written permission.
 //
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-// POSSIBILITY OF SUCH DAMAGE.
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "misc_log_ex.h"
 #include "common/threadpool.h"
 
@@ -39,29 +34,33 @@
 static __thread int depth = 0;
 static __thread bool is_leaf = false;
 
-namespace tools {
+namespace tools
+{
 threadpool::threadpool(unsigned int max_threads) : running(true), active(0) {
   create(max_threads);
 }
 
-threadpool::~threadpool() { destroy(); }
+threadpool::~threadpool() {
+  destroy();
+}
 
 void threadpool::destroy() {
-  try {
+  try
+  {
     const boost::unique_lock<boost::mutex> lock(mutex);
     running = false;
     has_work.notify_all();
-  } catch (...) {
+  }
+  catch (...)
+  {
     // if the lock throws, we're just do it without a lock and hope,
     // since the alternative is terminate
     running = false;
     has_work.notify_all();
   }
-  for (size_t i = 0; i < threads.size(); i++) {
-    try {
-      threads[i].join();
-    } catch (...) { /* ignore */
-    }
+  for (size_t i = 0; i<threads.size(); i++) {
+    try { threads[i].join(); }
+    catch (...) { /* ignore */ }
   }
   threads.clear();
 }
@@ -78,9 +77,8 @@ void threadpool::create(unsigned int max_threads) {
   max = max_threads ? max_threads : tools::get_max_concurrency();
   size_t i = max ? max - 1 : 0;
   running = true;
-  while (i--) {
-    threads.push_back(
-        boost::thread(attrs, boost::bind(&threadpool::run, this, false)));
+  while(i--) {
+    threads.push_back(boost::thread(attrs, boost::bind(&threadpool::run, this, false)));
   }
 }
 
@@ -107,18 +105,25 @@ void threadpool::submit(waiter *obj, std::function<void()> f, bool leaf) {
   }
 }
 
-unsigned int threadpool::get_max_concurrency() const { return max; }
+unsigned int threadpool::get_max_concurrency() const {
+  return max;
+}
 
-threadpool::waiter::~waiter() {
-  try {
+threadpool::waiter::~waiter()
+{
+  try
+  {
     boost::unique_lock<boost::mutex> lock(mt);
     if (num)
       MERROR("wait should have been called before waiter dtor - waiting now");
-  } catch (...) { /* ignore */
   }
-  try {
+  catch (...) { /* ignore */ }
+  try
+  {
     wait();
-  } catch (const std::exception &e) {
+  }
+  catch (const std::exception &e)
+  {
     /* ignored */
   }
 }
@@ -126,7 +131,7 @@ threadpool::waiter::~waiter() {
 bool threadpool::waiter::wait() {
   pool.run(true);
   boost::unique_lock<boost::mutex> lock(mt);
-  while (num)
+  while(num)
     cv.wait(lock);
   return !error();
 }
@@ -147,13 +152,13 @@ void threadpool::run(bool flush) {
   boost::unique_lock<boost::mutex> lock(mutex);
   while (running) {
     entry e;
-    while (queue.empty() && running) {
+    while(queue.empty() && running)
+    {
       if (flush)
         return;
       has_work.wait(lock);
     }
-    if (!running)
-      break;
+    if (!running) break;
 
     active++;
     e = std::move(queue.front());
@@ -161,15 +166,8 @@ void threadpool::run(bool flush) {
     lock.unlock();
     ++depth;
     is_leaf = e.leaf;
-    try {
-      e.f();
-    } catch (const std::exception &ex) {
-      e.wo->set_error();
-      try {
-        MERROR("Exception in threadpool job: " << ex.what());
-      } catch (...) {
-      }
-    }
+    try { e.f(); }
+    catch (const std::exception &ex) { e.wo->set_error(); try { MERROR("Exception in threadpool job: " << ex.what()); } catch (...) {} }
     --depth;
     is_leaf = false;
 
@@ -179,4 +177,4 @@ void threadpool::run(bool flush) {
     active--;
   }
 }
-} // namespace tools
+}

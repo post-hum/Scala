@@ -1,5 +1,4 @@
-// Copyright (c) 2014-2023, The Monero Project
-// Copyright (c) 2021-2023, Haku Labs MTÜ
+// Copyright (c) 2014-2022, The Scala Project
 // 
 // All rights reserved.
 // 
@@ -60,9 +59,7 @@ struct Struct
 };
 
 template <class Archive>
-struct serializer<Archive, Struct>
-{
-  static bool serialize(Archive &ar, Struct &s) {
+static bool do_serialize(Archive &ar, Struct &s) {
     ar.begin_object();
     ar.tag("a");
     ar.serialize_int(s.a);
@@ -72,8 +69,7 @@ struct serializer<Archive, Struct>
     ar.serialize_blob(s.blob, sizeof(s.blob));
     ar.end_object();
     return true;
-  }
-};
+}
 
 struct Struct1
 {
@@ -121,6 +117,23 @@ bool try_parse(const string &blob)
 {
   Struct1 s1;
   return serialization::parse_binary(blob, s1);
+}
+
+namespace example_namespace
+{
+  struct ADLExampleStruct
+  {
+    std::string msg;
+  };
+
+  template <class Archive>
+  static bool do_serialize(Archive &ar, ADLExampleStruct &aes)
+  {
+    ar.begin_object();
+    FIELD_N("custom_fieldname", aes.msg);
+    ar.end_object();
+    return ar.good();
+  }
 }
 
 TEST(Serialization, BinaryArchiveInts) {
@@ -760,7 +773,7 @@ TEST(Serialization, portability_wallet)
   }
 }
 
-#define OUTPUT_EXPORT_FILE_MAGIC "scala output export\003"
+#define OUTPUT_EXPORT_FILE_MAGIC "Scala output export\003"
 TEST(Serialization, portability_outputs)
 {
   // read file
@@ -887,7 +900,7 @@ inline void serialize(Archive &a, unsigned_tx_set &x, const boost::serialization
   a & x.txes;
   a & x.transfers;
 }
-#define UNSIGNED_TX_PREFIX "scala unsigned tx set\003"
+#define UNSIGNED_TX_PREFIX "Scala unsigned tx set\003"
 TEST(Serialization, portability_unsigned_tx)
 {
   const boost::filesystem::path filename = unit_test::data_dir / "unsigned_scala_tx";
@@ -1035,7 +1048,7 @@ TEST(Serialization, portability_unsigned_tx)
   ASSERT_TRUE(td2.m_pk_index == 0);
 }
 
-#define SIGNED_TX_PREFIX "scala signed tx set\003"
+#define SIGNED_TX_PREFIX "Scala signed tx set\003"
 TEST(Serialization, portability_signed_tx)
 {
   const boost::filesystem::path filename = unit_test::data_dir / "signed_scala_tx";
@@ -1178,4 +1191,19 @@ TEST(Serialization, difficulty_type)
   a2 >> v_unserialized;
 
   ASSERT_EQ(v_original, v_unserialized);
+}
+
+TEST(Serialization, adl_free_function)
+{
+  std::stringstream ss;
+  json_archive<true> ar(ss);
+
+  const std::string msg = "Howdy, World!";
+  example_namespace::ADLExampleStruct aes{msg};
+
+  ASSERT_TRUE(serialization::serialize(ar, aes));
+
+  //                                                       VVVVVVVVVVVVVVVVVVVVVVVVVV weird string serialization artifact
+  const std::string expected = "{\"custom_fieldname\": " + std::to_string(msg.size()) + '"' + epee::string_tools::buff_to_hex_nodelimer(msg) + "\"}";
+  EXPECT_EQ(expected, ss.str());
 }

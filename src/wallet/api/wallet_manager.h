@@ -1,5 +1,4 @@
-// Copyright (c) 2014-2023, The Monero Project
-// Copyright (c) 2021-2023, Haku Labs MTÜ
+// Copyright (c) 2014-2022, The Scala Project
 //
 // All rights reserved.
 //
@@ -34,7 +33,7 @@
 #include "net/http.h"
 #include <string>
 
-namespace scala {
+namespace Scala {
 
 class WalletManagerImpl : public WalletManager
 {

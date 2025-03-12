@@ -1,4 +1,4 @@
-// Copyright (c) 2023, The scala Project
+// Copyright (c) 2023, The Scala Project
 //
 // All rights reserved.
 //
@@ -372,7 +372,7 @@ TEST(verRctNonSemanticsSimple, unserializable_sig_changes)
 
 TEST(verRctNonSemanticsSimple, serializable_mixring_changes)
 {
-    // Hello, future scala devs! If this unit test fails, a huge concensus-related assumption has
+    // Hello, future Scala devs! If this unit test fails, a huge concensus-related assumption has
     // been broken and verRctNonSemanticsSimpleCached needs to be reevalulated for validity. If it
     // is not, there may be an exploit which allows for double-spending. See the implementation for
     // more comments on the uniqueness of the internal cache hash.

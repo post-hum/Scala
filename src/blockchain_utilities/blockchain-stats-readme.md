@@ -1,6 +1,6 @@
-# scala Blockchain Stats
+# Scala Blockchain Stats
 
-scala Blockchain Stats utlity exports daily statistics for the scala blockchain from creation through current state.
+Scala Blockchain Stats utlity exports daily statistics for the scala blockchain from creation through current state.
 
 ## Usage:
 

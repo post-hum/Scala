@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2023, The scala Project
+// Copyright (c) 2017-2022, The Scala Project
 //
 // All rights reserved.
 //
@@ -29,7 +29,7 @@
 #include "wallet/api/wallet2_api.h"
 #include "wallet/wallet2.h"
 
-namespace scala {
+namespace Scala {
 
 class WalletImpl;
 

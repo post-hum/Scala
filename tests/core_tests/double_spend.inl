@@ -1,5 +1,4 @@
-// Copyright (c) 2014-2023, The Monero Project
-// Copyright (c) 2021-2023, Haku Labs MTÜ
+// Copyright (c) 2014-2022, The Scala Project
 // 
 // All rights reserved.
 // 
@@ -145,7 +144,7 @@ bool gen_double_spend_in_tx<txs_keeped_by_block>::generate(std::vector<test_even
   destinations.push_back(de);
 
   cryptonote::transaction tx_1;
-  if (!construct_tx(bob_account.get_keys(), sources, destinations, boost::none, std::vector<uint8_t>(), tx_1, 0))
+  if (!construct_tx(bob_account.get_keys(), sources, destinations, boost::none, std::vector<uint8_t>(), tx_1))
     return false;
 
   SET_EVENT_VISITOR_SETT(events, txs_keeped_by_block ? event_visitor_settings::set_txs_keeped_by_block : 0);

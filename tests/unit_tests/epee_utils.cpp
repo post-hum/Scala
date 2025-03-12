@@ -1,5 +1,4 @@
-// Copyright (c) 2014-2023, The Monero Project
-// Copyright (c) 2021-2023, Haku Labs MTÜ
+// Copyright (c) 2014-2022, The Scala Project
 //
 // All rights reserved.
 //
@@ -1428,6 +1427,21 @@ TEST(StringTools, GetIpInt32)
   EXPECT_EQ(htonl(0xff0aff00), ip);
 }
 
+TEST(StringTools, GetExtension)
+{
+  EXPECT_EQ(std::string{}, epee::string_tools::get_extension(""));
+  EXPECT_EQ(std::string{}, epee::string_tools::get_extension("."));
+  EXPECT_EQ(std::string{"keys"}, epee::string_tools::get_extension("wallet.keys"));
+  EXPECT_EQ(std::string{"3"}, epee::string_tools::get_extension("1.2.3"));
+}
+
+TEST(StringTools, CutOffExtension)
+{
+  EXPECT_EQ(std::string{}, epee::string_tools::cut_off_extension(""));
+  EXPECT_EQ(std::string{"/home/user/Scala/wallets/wallet"}, epee::string_tools::cut_off_extension("/home/user/Scala/wallets/wallet"));
+  EXPECT_EQ(std::string{"/home/user/Scala/wallets/wallet"}, epee::string_tools::cut_off_extension("/home/user/Scala/wallets/wallet.keys"));
+}
+
 TEST(NetUtils, IPv4NetworkAddress)
 {
   static_assert(epee::net_utils::ipv4_network_address::get_type_id() == epee::net_utils::address_type::ipv4, "bad ipv4 type id");
@@ -1836,4 +1850,60 @@ TEST(parsing, unicode)
   si = s.begin();
   epee::misc_utils::parse::match_string2(si, s.end(), bs);
   EXPECT_EQ(bs, "あまやかす");
+}
+
+TEST(parsing, strtoul)
+{
+  long ul;
+  const char* p;
+  const char* endp;
+
+  errno = 0; // Some libc's only set errno on failure, some set it to 0 on success
+
+  p = "0";
+  endp = nullptr;
+  ul = std::strtoul(p, const_cast<char**>(&endp), 10);
+  EXPECT_EQ(0, errno);
+  EXPECT_EQ(0, ul);
+  EXPECT_EQ(p + 1, endp);
+
+  p = "000000";
+  endp = nullptr;
+  ul = std::strtoul(p, const_cast<char**>(&endp), 10);
+  EXPECT_EQ(0, errno);
+  EXPECT_EQ(0, ul);
+  EXPECT_EQ(p + 6, endp);
+
+  p = "1";
+  endp = nullptr;
+  ul = std::strtoul(p, const_cast<char**>(&endp), 10);
+  EXPECT_EQ(0, errno);
+  EXPECT_EQ(1, ul);
+  EXPECT_EQ(p + 1, endp);
+
+  p = "0q";
+  endp = nullptr;
+  ul = std::strtoul(p, const_cast<char**>(&endp), 10);
+  EXPECT_EQ(0, errno);
+  EXPECT_EQ(0, ul);
+  EXPECT_EQ(p + 1, endp);
+
+  p = "    \t   0";
+  endp = nullptr;
+  ul = std::strtoul(p, const_cast<char**>(&endp), 10);
+  EXPECT_EQ(0, errno);
+  EXPECT_EQ(0, ul);
+  EXPECT_EQ(p + 9, endp);
+
+  p = "q";
+  endp = nullptr;
+  ul = std::strtoul(p, const_cast<char**>(&endp), 10);
+  EXPECT_EQ(0, ul);
+  EXPECT_EQ(p, endp);
+
+  p = "999999999999999999999999999999999999999";
+  endp = nullptr;
+  ul = std::strtoul(p, const_cast<char**>(&endp), 10);
+  EXPECT_EQ(ERANGE, errno);
+  EXPECT_EQ(ULLONG_MAX, ul);
 }

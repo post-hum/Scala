@@ -1,5 +1,4 @@
-// Copyright (c) 2014-2023, The Monero Project
-// Copyright (c) 2021-2023, Haku Labs MTÜ
+// Copyright (c) 2014-2022, The Scala Project
 //
 // All rights reserved.
 //
@@ -52,6 +51,7 @@
 #include "common/dns_utils.h"
 #include "common/pruning.h"
 #include "net/error.h"
+#include "net/net_helper.h"
 #include "math_helper.h"
 #include "misc_log_ex.h"
 #include "p2p_protocol_defs.h"
@@ -64,8 +64,10 @@
 #include <miniupnp/miniupnpc/upnpcommands.h>
 #include <miniupnp/miniupnpc/upnperrors.h>
 
-#undef scala_DEFAULT_LOG_CATEGORY
-#define scala_DEFAULT_LOG_CATEGORY "net.p2p"
+#undef SCALA_DEFAULT_LOG_CATEGORY
+#define SCALA_DEFAULT_LOG_CATEGORY "net.p2p"
+
+#define NET_MAKE_IP(b1,b2,b3,b4)  ((LPARAM)(((DWORD)(b1)<<24)+((DWORD)(b2)<<16)+((DWORD)(b3)<<8)+((DWORD)(b4))))
 
 #define MIN_WANTED_SEED_NODES 12
 
@@ -104,7 +106,7 @@ namespace nodetool
     command_line::add_arg(desc, arg_p2p_bind_ip);
     command_line::add_arg(desc, arg_p2p_bind_ipv6_address);
     command_line::add_arg(desc, arg_p2p_bind_port, false);
-    command_line::add_arg(desc, arg_p2p_bind_port_ipv6, false);
+    command_line::add_arg(desc, arg_p2p_bind_port_ipv6, true);
     command_line::add_arg(desc, arg_p2p_use_ipv6);
     command_line::add_arg(desc, arg_p2p_ignore_ipv4);
     command_line::add_arg(desc, arg_p2p_external_port);
@@ -702,24 +704,13 @@ namespace nodetool
   {
     std::set<std::string> full_addrs;
     if (m_nettype == cryptonote::TESTNET)
-    {
-        full_addrs.insert("65.21.221.1:22822");
-        full_addrs.insert("65.21.221.2:22822");
-        full_addrs.insert("65.21.221.3:22822");
-    }
+    {}
     else if (m_nettype == cryptonote::STAGENET)
-    {
-        full_addrs.insert("65.21.221.2:33833");
-        full_addrs.insert("65.21.221.3:33833");
-    }
+    {}
     else if (m_nettype == cryptonote::FAKECHAIN)
     {}
     else
-    {
-      full_addrs.insert("65.21.221.2:11811");
-      full_addrs.insert("65.21.221.3:11811");
-      full_addrs.insert("95.111.237.231:11811");
-    }
+    {}
     return full_addrs;
   }
   //-----------------------------------------------------------------------------------
@@ -848,13 +839,24 @@ namespace nodetool
     case epee::net_utils::zone::tor:
       if (m_nettype == cryptonote::MAINNET)
       {
-        return {};
+        return {
+          "zbjkbsxc5munw3qusl7j2hpcmikhqocdf4pqhnhtpzw5nt5jrmofptid.onion:18083",
+          "qz43zul2x56jexzoqgkx2trzwcfnr6l3hbtfcfx54g4r3eahy3bssjyd.onion:18083",
+          "plowsof3t5hogddwabaeiyrno25efmzfxyro2vligremt7sxpsclfaid.onion:18083",
+          "plowsoffjexmxalw73tkjmf422gq6575fc7vicuu4javzn2ynnte6tyd.onion:18083",
+          "plowsofe6cleftfmk2raiw5h2x66atrik3nja4bfd3zrfa2hdlgworad.onion:18083",
+          "aclc4e2jhhtr44guufbnwk5bzwhaecinax4yip4wr4tjn27sjsfg6zqd.onion:18083",
+        };
       }
       return {};
     case epee::net_utils::zone::i2p:
       if (m_nettype == cryptonote::MAINNET)
       {
-        return {};
+        return {
+          "uqj3aphckqtjsitz7kxx5flqpwjlq5ppr3chazfued7xucv3nheq.b32.i2p",
+          "vdmnehdjkpkg57nthgnjfuaqgku673r5bpbqg56ix6fyqoywgqrq.b32.i2p",
+          "ugnlcdciyhghh2zert7c3kl4biwkirc43ke33jiy5slnd3mv2trq.b32.i2p",
+        };
       }
       return {};
     default:
@@ -949,6 +951,7 @@ namespace nodetool
         std::string ipv6_port = "";
         zone.second.m_net_server.set_connection_filter(this);
         MINFO("Binding (IPv4) on " << zone.second.m_bind_ip << ":" << zone.second.m_port);
+        MINFO("Binding (IPv6) on " << zone.second.m_bind_ipv6_address << ":" << zone.second.m_port_ipv6 << m_use_ipv6);
         if (!zone.second.m_bind_ipv6_address.empty() && m_use_ipv6)
         {
           ipv6_addr = zone.second.m_bind_ipv6_address;
@@ -1725,7 +1728,7 @@ namespace nodetool
         {
           // seeds should have hostname converted to IP already
           MDEBUG("Seed node: " << full_addr);
-          server.m_seed_nodes.push_back(scala_UNWRAP(net::get_network_address(full_addr, default_port)));
+          server.m_seed_nodes.push_back(SCALA_UNWRAP(net::get_network_address(full_addr, default_port)));
         }
         MDEBUG("Number of seed nodes: " << server.m_seed_nodes.size());
       }
@@ -2009,13 +2012,8 @@ namespace nodetool
       return true;
 
     static const std::vector<std::string> dns_urls = {
-      "blocklist.scalapulse.se"
-    , "blocklist.scalapulse.org"
-    , "blocklist.scalapulse.net"
-    , "blocklist.scalapulse.no"
-    , "blocklist.scalapulse.fr"
-    , "blocklist.scalapulse.de"
-    , "blocklist.scalapulse.ch"
+      "blocklist.scala.network",
+      "blocklist.scalaproject.io"
     };
 
     std::vector<std::string> records;
@@ -2276,11 +2274,12 @@ namespace nodetool
       if (enet::zone::tor < network->first)
         break; // unknown network
 
-      if (network->second.m_connect)
+      const auto status = network->second.m_notifier.get_status();
+      if (network->second.m_connect && status.has_outgoing)
         return send(*network);
     }
 
-    // configuration should not allow this scenario
+    MWARNING("Unable to send " << txs.size() << " transaction(s): anonymity networks had no outgoing connections");
     return enet::zone::invalid;
   }
   //-----------------------------------------------------------------------------------

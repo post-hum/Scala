@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2023, The scala Project
+// Copyright (c) 2017-2022, The Scala Project
 //
 // All rights reserved.
 //
@@ -27,8 +27,8 @@
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#ifndef scala_TRANSPORT_H
-#define scala_TRANSPORT_H
+#ifndef SCALA_TRANSPORT_H
+#define SCALA_TRANSPORT_H
 
 
 #include <boost/asio.hpp>
@@ -410,4 +410,4 @@ namespace trezor {
 }}
 
 
-#endif //scala_TRANSPORT_H
+#endif //SCALA_TRANSPORT_H

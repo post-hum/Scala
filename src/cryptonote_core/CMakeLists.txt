@@ -1,5 +1,4 @@
-# Copyright (c) 2014-2023, The Monero Project
-# Copyright (c) 2021-2023, Haku Labs MTÜ
+# Copyright (c) 2014-2022, The Scala Project
 #
 # All rights reserved.
 #
@@ -30,6 +29,7 @@
 set(cryptonote_core_sources
   blockchain.cpp
   cryptonote_core.cpp
+  diardi.cpp
   tx_pool.cpp
   tx_sanity_check.cpp
   cryptonote_tx_utils.cpp
