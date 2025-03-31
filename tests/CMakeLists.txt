@@ -125,7 +125,7 @@ add_test(
 #
 if (${SCALA_WALLET_CRYPTO_BENCH} STREQUAL "auto")
   set(SCALA_WALLET_CRYPTO_BENCH "cn")
-  monero_crypto_autodetect(AVAILABLE BEST)
+  scala_crypto_autodetect(AVAILABLE BEST)
   if (DEFINED AVAILABLE)
     list(APPEND SCALA_WALLET_CRYPTO_BENCH ${AVAILABLE})
   endif ()
@@ -136,15 +136,15 @@ list(REMOVE_DUPLICATES SCALA_WALLET_CRYPTO_BENCH)
 list(REMOVE_ITEM SCALA_WALLET_CRYPTO_BENCH "cn") # always used for comparison
 set(SCALA_WALLET_CRYPTO_BENCH_NAMES "(cn)")
 foreach(BENCH IN LISTS SCALA_WALLET_CRYPTO_BENCH)
-  monero_crypto_valid(${BENCH} VALID)
+  scala_crypto_valid(${BENCH} VALID)
   if (NOT VALID)
     message(FATAL_ERROR "Invalid SCALA_WALLET_CRYPTO_BENCH option ${BENCH}")
   endif ()
 
-  monero_crypto_get_target(${BENCH} BENCH_LIBRARY)
+  scala_crypto_get_target(${BENCH} BENCH_LIBRARY)
   list(APPEND BENCH_OBJECTS $<TARGET_OBJECTS:${BENCH_LIBRARY}>)
 
-  monero_crypto_get_namespace(${BENCH} BENCH_NAMESPACE)
+  scala_crypto_get_namespace(${BENCH} BENCH_NAMESPACE)
   set(SCALA_WALLET_CRYPTO_BENCH_NAMES "${SCALA_WALLET_CRYPTO_BENCH_NAMES}(${BENCH_NAMESPACE})")
 endforeach ()
 

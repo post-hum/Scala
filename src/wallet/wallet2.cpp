@@ -3334,9 +3334,12 @@ void check_block_hard_fork_version(cryptonote::network_type nettype, uint8_t hf_
   const hardfork_t *wallet_hard_forks = nettype == TESTNET ? testnet_hard_forks
     : nettype == STAGENET ? stagenet_hard_forks : mainnet_hard_forks;
 
-  wallet_is_outdated = static_cast<size_t>(hf_version) > wallet_num_hard_forks;
-  if (wallet_is_outdated)
+
+  wallet_is_outdated = hf_version > wallet_hard_forks[wallet_num_hard_forks - 1].version;
+
+  if (wallet_is_outdated) {
     return;
+  }
 
   // check block's height falls within wallet's expected range for block's given version
   uint64_t start_height = hf_version == 1 ? 0 : wallet_hard_forks[hf_version - 1].height;
