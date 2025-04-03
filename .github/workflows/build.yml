@@ -48,7 +48,7 @@ jobs:
       - name: install dependencies
         run: |
           brew update
-          brew install --quiet cmake boost hidapi openssl zmq miniupnpc expat libunwind-headers protobuf ccache
+          brew install --quiet cmake boost hidapi openssl zmq libpgm miniupnpc expat libunwind-headers protobuf ccache
       - name: build
         run: |
           ${{env.CCACHE_SETTINGS}}
