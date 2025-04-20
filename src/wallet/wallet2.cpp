@@ -3418,25 +3418,39 @@ void wallet2::refresh(bool trusted_daemon, uint64_t start_height, uint64_t & blo
 //----------------------------------------------------------------------------------------------------
 void check_block_hard_fork_version(cryptonote::network_type nettype, uint8_t hf_version, uint64_t height, bool &wallet_is_outdated, bool &daemon_is_outdated)
 {
-  const size_t wallet_num_hard_forks = nettype == TESTNET ? num_testnet_hard_forks
-    : nettype == STAGENET ? num_stagenet_hard_forks : num_mainnet_hard_forks;
-  const hardfork_t *wallet_hard_forks = nettype == TESTNET ? testnet_hard_forks
-    : nettype == STAGENET ? stagenet_hard_forks : mainnet_hard_forks;
+    wallet_is_outdated = false;
+    daemon_is_outdated = false;
 
+    const size_t wallet_num_hard_forks = nettype == TESTNET ? num_testnet_hard_forks
+        : nettype == STAGENET ? num_stagenet_hard_forks : num_mainnet_hard_forks;
+    const hardfork_t *wallet_hard_forks = nettype == TESTNET ? testnet_hard_forks
+        : nettype == STAGENET ? stagenet_hard_forks : mainnet_hard_forks;
 
-  wallet_is_outdated = hf_version > wallet_hard_forks[wallet_num_hard_forks - 1].version;
+    if (height == 0) {
+        if (hf_version == 1 && wallet_hard_forks[0].version == 1 && wallet_hard_forks[0].height == 1) {
+            return;
+        }
+    }
 
-  if (wallet_is_outdated) {
-    return;
-  }
+    int hf_index = -1;
+    for (size_t i = 0; i < wallet_num_hard_forks; ++i) {
+        if (wallet_hard_forks[i].version == hf_version) {
+            hf_index = i;
+            break;
+        }
+    }
 
-  // check block's height falls within wallet's expected range for block's given version
-  uint64_t start_height = hf_version == 1 ? 0 : wallet_hard_forks[hf_version - 1].height;
-  uint64_t end_height = static_cast<size_t>(hf_version) + 1 > wallet_num_hard_forks
-    ? std::numeric_limits<uint64_t>::max()
-    : wallet_hard_forks[hf_version].height;
+    if (hf_index == -1) {
+        wallet_is_outdated = true;
+        return;
+    }
 
-  daemon_is_outdated = height < start_height || height >= end_height;
+    uint64_t start_height = wallet_hard_forks[hf_index].height;
+    uint64_t end_height = (hf_index + 1 < wallet_num_hard_forks)
+        ? wallet_hard_forks[hf_index + 1].height
+        : std::numeric_limits<uint64_t>::max();
+
+    daemon_is_outdated = height < start_height || height >= end_height;
 }
 //----------------------------------------------------------------------------------------------------
 void wallet2::pull_and_parse_next_blocks(bool first, bool try_incremental, uint64_t start_height, uint64_t &blocks_start_height, std::list<crypto::hash> &short_chain_history, const std::vector<cryptonote::block_complete_entry> &prev_blocks, const std::vector<parsed_block> &prev_parsed_blocks, std::vector<cryptonote::block_complete_entry> &blocks, std::vector<parsed_block> &parsed_blocks, bool &last, bool &error, std::exception_ptr &exception)
