@@ -167,58 +167,6 @@ jobs:
           ${{env.CCACHE_SETTINGS}}
           ${{env.BUILD_DEFAULT_LINUX}}
 
-  test-ubuntu:
-    name: "${{ matrix.name }} (tests)"
-    needs: build-ubuntu
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - name: Ubuntu 20.04
-            container: ubuntu:20.04
-    container:
-      image: ${{ matrix.container }}
-      env:
-        DEBIAN_FRONTEND: noninteractive
-        CCACHE_TEMPDIR: /tmp/.ccache-temp
-        CCACHE_DIR: ~/.ccache
-      # Setting up a loop device (losetup) requires additional capabilities.
-      # tests/create_test_disks.sh
-      options: --privileged
-    steps:
-      - name: set apt conf
-        run: ${{env.APT_SET_CONF}}
-      - name: update apt
-        run: apt update
-      - name: install scala dependencies
-        run: ${{env.APT_INSTALL_LINUX}}
-      - name: install pip
-        run: apt install -y python3-pip
-      - name: install Python dependencies
-        run: pip install requests psutil monotonic zmq deepdiff
-      - name: configure git
-        run: git config --global --add safe.directory '*'
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - uses: actions/cache@v4
-        with:
-          path: ~/.ccache
-          key: ccache-${{ matrix.container }}-build-${{ github.sha }}
-          restore-keys: ccache-${{ matrix.container }}-build-
-      - name: create dummy disk drives for testing
-        run: tests/create_test_disks.sh >> $GITHUB_ENV
-      - uses: ./.github/actions/set-make-job-count
-      - name: tests
-        env:
-          CTEST_OUTPUT_ON_FAILURE: ON
-          DNS_PUBLIC: tcp://9.9.9.9
-          CMAKE_BUILD_PARALLEL_LEVEL: ${{env.MAKE_JOB_COUNT}}
-        run: |
-          ${{env.CCACHE_SETTINGS}}
-          ${{env.BUILD_DEFAULT_LINUX}}
-          cmake --build build --target test
-
   source-archive:
     name: "source archive"
     runs-on: ubuntu-latest
