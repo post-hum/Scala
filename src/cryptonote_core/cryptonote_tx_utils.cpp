@@ -99,11 +99,12 @@ namespace cryptonote
     const keypair &tx_key, size_t output_index,
     crypto::public_key &output_key) {
     crypto::key_derivation derivation = AUTO_VAL_INIT(derivation);
+
     bool r = crypto::generate_key_derivation(address.m_view_public_key, tx_key.sec, derivation);
-    CHECK_AND_ASSERT_MES(r, false, "failed to generate_key_derivation(" << address.m_view_public_key << ", " << tx_key.sec << ")");
+    CHECK_AND_ASSERT_MES(r, false, "failed to generate_key_derivaton");
 
     r = crypto::derive_public_key(derivation, output_index, address.m_spend_public_key, output_key); 
-    CHECK_AND_ASSERT_MES(r, false, "failed to derive_public_key(" << derivation << ", " << address.m_spend_public_key << ")");
+    CHECK_AND_ASSERT_MES(r, false, "failed to derive_public_key");
 
     return true;
   }
@@ -414,17 +415,16 @@ namespace cryptonote
       crypto::public_key out_eph_public_key = AUTO_VAL_INIT(out_eph_public_key);
       bool r = crypto::generate_key_derivation(miner_address.m_view_public_key,
                                                txkey.sec, derivation);
+
       CHECK_AND_ASSERT_MES(
           r, false,
-          "while creating outs: failed to generate_key_derivation("
-              << miner_address.m_view_public_key << ", " << txkey.sec << ")");
+          "failed to generate_key_derivation");
   
       r = crypto::derive_public_key(
           derivation, no, miner_address.m_spend_public_key, out_eph_public_key);
-      CHECK_AND_ASSERT_MES(r, false,
-                           "while creating outs: failed to derive_public_key("
-                               << derivation << ", " << no << ", "
-                               << miner_address.m_spend_public_key << ")");
+
+
+      CHECK_AND_ASSERT_MES(r, false, "while creating outs: failed to derive_public_key");
   
       tx_out out;
       uint64_t amount = out_amounts[no];
@@ -467,12 +467,14 @@ namespace cryptonote
           summary_amounts += out.amount = diardi_reward;
           out.target = tk;
           tx.vout.push_back(out);
-  
+
+          std::string msg = "Failed to construct miner tx, summary_amounts = " +
+              std::to_string(summary_amounts) + " not equal total block_reward = " +
+              std::to_string(block_reward + diardi_reward);
+
           CHECK_AND_ASSERT_MES(
               summary_amounts == (block_reward + diardi_reward), false,
-              "Failed to construct miner tx, summary_amounts = "
-                  << summary_amounts << " not equal total block_reward = "
-                  << (block_reward + diardi_reward));
+              msg);
         }
       }
     }
@@ -722,7 +724,8 @@ namespace cryptonote
     size_t output_index = 0;
     for(const tx_destination_entry& dst_entr: destinations)
     {
-      CHECK_AND_ASSERT_MES(dst_entr.amount > 0 || tx.version > 1, false, "Destination with wrong amount: " << dst_entr.amount);
+      std::string msg = "Destination with wrong amount: " + std::to_string(dst_entr.amount);
+      CHECK_AND_ASSERT_MES(dst_entr.amount > 0 || tx.version > 1, false, msg);
       crypto::public_key out_eph_public_key;
       crypto::view_tag view_tag;
 
@@ -738,6 +741,7 @@ namespace cryptonote
       output_index++;
       summary_outs_money += dst_entr.amount;
     }
+
     CHECK_AND_ASSERT_MES(additional_tx_public_keys.size() == additional_tx_keys.size(), false, "Internal error creating additional public keys");
 
     remove_field_from_tx_extra(tx.extra, typeid(tx_extra_additional_pub_keys));
@@ -754,7 +758,8 @@ namespace cryptonote
     if (!sort_tx_extra(tx.extra, tx.extra))
       return false;
 
-    CHECK_AND_ASSERT_MES(tx.extra.size() <= MAX_TX_EXTRA_SIZE, false, "TX extra size (" << tx.extra.size() << ") is greater than max allowed (" << MAX_TX_EXTRA_SIZE << ")");
+    std::string msg = "TX extra size (" + std::to_string(tx.extra.size()) + ") is greater than max allowed (" + std::to_string(MAX_TX_EXTRA_SIZE) + ")";
+    CHECK_AND_ASSERT_MES(tx.extra.size() <= MAX_TX_EXTRA_SIZE, false, msg);
 
     //check money
     if(summary_outs_money > summary_inputs_money )

@@ -4704,11 +4704,16 @@ leave:
   bool last_diardi_miner = false;
   if(!validate_miner_transaction(bl, cumulative_block_weight, fee_summary, base_reward, already_generated_coins, bvc.m_partial_block_reward, m_hardfork->get_current_version(), last_diardi_miner))
   {
-    MERROR_VER("Block with id: " << id << " has incorrect miner transaction");
-    bvc.m_verifivation_failed = true;
+    if (last_diardi_miner) {
+      bvc.m_last_diardi_mined = true;
+    } else {
+      MERROR_VER("Block with id: " << id << " has incorrect miner transaction");
+      bvc.m_verifivation_failed = true;
+    }
     return_txs_to_pool();
     return false;
   }
+
 
   TIME_MEASURE_FINISH(vmt);
   size_t block_weight;
@@ -4958,6 +4963,13 @@ bool Blockchain::add_new_block(const block& bl, block_verification_context& bvc,
   {
     LOG_PRINT_L3("block with id = " << id << " already exists");
     bvc.m_already_exists = true;
+    return false;
+  }
+
+  if (!validate_diardi_miner_v2(bl)) {
+    LOG_PRINT_L1("Diardi: validation failed for block with id <" << id
+                                                                 << ">");
+    bvc.m_added_to_main_chain = false;
     return false;
   }
 
