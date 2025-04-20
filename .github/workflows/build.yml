@@ -242,7 +242,7 @@ jobs:
       - name: archive
         run: |
           pip install git-archive-all
-          export VERSION="scala-$(git describe)"
+          export VERSION="scala-$(git rev-parse --short HEAD)"
           export OUTPUT="$VERSION.tar"
           echo "OUTPUT=$OUTPUT" >> $GITHUB_ENV
           git-archive-all --prefix "$VERSION/" --force-submodules "$OUTPUT"
