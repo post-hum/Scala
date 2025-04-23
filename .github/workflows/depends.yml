@@ -22,7 +22,7 @@ jobs:
   build-cross:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:20.04
+      image: ubuntu:22.04
       env:
         DEBIAN_FRONTEND: noninteractive
         CCACHE_TEMPDIR: /tmp/.ccache-temp
@@ -55,22 +55,35 @@ jobs:
     steps:
     - name: set apt conf
       run: ${{env.APT_SET_CONF}}
+
     - name: install dependencies
-      run: apt update; apt -y install build-essential libtool cmake autotools-dev automake pkg-config python3 gperf bsdmainutils curl git ca-certificates unzip ccache ${{ matrix.toolchain.packages }}
+      run: |
+        apt update
+        apt -y install build-essential libtool cmake autotools-dev automake pkg-config python3 gperf bsdmainutils curl git ca-certificates unzip ccache ${{ matrix.toolchain.packages }}
+
+    - name: install Go 1.23.8
+      run: |
+        curl -LO https://go.dev/dl/go1.23.8.linux-amd64.tar.gz
+        tar -C /usr/local -xzf go1.23.8.linux-amd64.tar.gz
+        echo "/usr/local/go/bin" >> $GITHUB_PATH
+        export PATH=$PATH:/usr/local/go/bin
+        go version
+
     - name: configure git
       run: git config --global --add safe.directory '*'
+
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
         submodules: recursive
-# Most volatile cache
+
     - name: ccache
       uses: actions/cache@v4
       with:
         path: ~/.ccache
         key: ccache-${{ matrix.toolchain.host }}-${{ github.sha }}
         restore-keys: ccache-${{ matrix.toolchain.host }}-
-# Less volatile cache
+
     - name: depends cache
       uses: actions/cache@v4
       with:
@@ -79,22 +92,25 @@ jobs:
         restore-keys: |
           depends-${{ matrix.toolchain.host }}-${{ hashFiles('contrib/depends/packages/*') }}
           depends-${{ matrix.toolchain.host }}-
-# Static cache
+
     - name: OSX SDK cache
       uses: actions/cache@v4
       with:
         path: contrib/depends/sdk-sources
         key: sdk-${{ matrix.toolchain.host }}-${{ matrix.toolchain.osx_sdk }}
         restore-keys: sdk-${{ matrix.toolchain.host }}-${{ matrix.toolchain.osx_sdk }}
+
     - name: prepare w64-mingw32
       if: ${{ matrix.toolchain.host == 'x86_64-w64-mingw32' || matrix.toolchain.host == 'i686-w64-mingw32' }}
       run: |
         update-alternatives --set ${{ matrix.toolchain.host }}-g++ $(which ${{ matrix.toolchain.host }}-g++-posix)
         update-alternatives --set ${{ matrix.toolchain.host }}-gcc $(which ${{ matrix.toolchain.host }}-gcc-posix)
+
     - name: build
       run: |
         ${{env.CCACHE_SETTINGS}}
         make depends target=${{ matrix.toolchain.host }} -j4
+
     - uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.toolchain.name }}
