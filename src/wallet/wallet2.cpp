@@ -8520,98 +8520,41 @@ uint64_t wallet2::get_fee_multiplier(uint32_t priority, int fee_algorithm)
   return 1;
 }
 //----------------------------------------------------------------------------------------------------
-uint64_t wallet2::get_dynamic_base_fee_estimate()
-{
-  uint64_t fee;
-  boost::optional<std::string> result = m_node_rpc_proxy.get_dynamic_base_fee_estimate(FEE_ESTIMATE_GRACE_BLOCKS, fee);
-  if (!result)
-    return fee;
-  const uint64_t base_fee = use_fork_rules(HF_VERSION_PER_BYTE_FEE) ? FEE_PER_BYTE : FEE_PER_KB;
-  LOG_PRINT_L1("Failed to query base fee, using " << print_money(base_fee));
-  return base_fee;
+uint64_t wallet2::get_dynamic_base_fee_estimate() { return FEE_PER_KB; }
+//----------------------------------------------------------------------------------------------------
+uint64_t wallet2::get_base_fee() { return FEE_PER_KB; }
+//----------------------------------------------------------------------------------------------------
+uint64_t wallet2::get_base_fee(uint32_t priority) {
+  const uint64_t base_fee = get_base_fee();
+  const uint64_t fee_multiplier = get_fee_multiplier(priority);
+  return base_fee * fee_multiplier;
 }
 //----------------------------------------------------------------------------------------------------
-uint64_t wallet2::get_base_fee()
-{
-  if(m_light_wallet)
-  {
-    if (use_fork_rules(HF_VERSION_PER_BYTE_FEE))
-      return m_light_wallet_per_kb_fee / 1024;
-    else
-      return m_light_wallet_per_kb_fee;
-  }
-  bool use_dyn_fee = use_fork_rules(HF_VERSION_DYNAMIC_FEE, -30 * 1);
-  if (!use_dyn_fee)
-    return FEE_PER_KB;
-
-  return get_dynamic_base_fee_estimate();
-}
-//----------------------------------------------------------------------------------------------------
-uint64_t wallet2::get_base_fee(uint32_t priority)
-{
-  const bool use_2021_scaling = use_fork_rules(HF_VERSION_2021_SCALING, -30 * 1);
-  if (use_2021_scaling)
-  {
-    // clamp and map to 0..3 indices, mapping 0 (default, but should not end up here) to 0, and 1..4 to 0..3
-    if (priority == 0)
-      priority = 1;
-    else if (priority > 4)
-      priority = 4;
-    --priority;
-
-    std::vector<uint64_t> fees;
-    boost::optional<std::string> result = m_node_rpc_proxy.get_dynamic_base_fee_estimate_2021_scaling(FEE_ESTIMATE_GRACE_BLOCKS, fees);
-    if (result)
-    {
-      MERROR("Failed to determine base fee, using default");
-      return FEE_PER_BYTE;
-    }
-    if (priority >= fees.size())
-    {
-      MERROR("Failed to determine base fee for priority " << priority << ", using default");
-      return FEE_PER_BYTE;
-    }
-    return fees[priority];
-  }
-  else
-  {
-    const uint64_t base_fee = get_base_fee();
-    const uint64_t fee_multiplier = get_fee_multiplier(priority);
-    return base_fee * fee_multiplier;
-  }
-}
-//----------------------------------------------------------------------------------------------------
-uint64_t wallet2::get_fee_quantization_mask()
-{
-  if(m_light_wallet)
-  {
-    return 1; // TODO
-  }
+uint64_t wallet2::get_fee_quantization_mask() {
   bool use_per_byte_fee = use_fork_rules(HF_VERSION_PER_BYTE_FEE, 0);
   if (!use_per_byte_fee)
     return 1;
 
   uint64_t fee_quantization_mask;
-  boost::optional<std::string> result = m_node_rpc_proxy.get_fee_quantization_mask(fee_quantization_mask);
+  boost::optional<std::string> result =
+      m_node_rpc_proxy.get_fee_quantization_mask(fee_quantization_mask);
   if (result)
     return 1;
   return fee_quantization_mask;
 }
 //----------------------------------------------------------------------------------------------------
-int wallet2::get_fee_algorithm()
-{
+int wallet2::get_fee_algorithm() {
   // changes at v3, v5, v8
   if (use_fork_rules(HF_VERSION_PER_BYTE_FEE, 0))
     return 3;
   if (use_fork_rules(5, 0))
     return 2;
   if (use_fork_rules(3, -30 * 14))
-   return 1;
+    return 1;
   return 0;
 }
 //------------------------------------------------------------------------------------------------------------------------------
-uint64_t wallet2::get_min_ring_size()
-{
+uint64_t wallet2::get_min_ring_size() {
   if (use_fork_rules(HF_VERSION_MIN_MIXIN_15, 0))
     return 16;
   if (use_fork_rules(8, 10))
