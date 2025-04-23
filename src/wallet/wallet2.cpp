@@ -11158,7 +11158,7 @@ std::vector<wallet2::pending_tx> wallet2::create_transactions_2(std::vector<cryp
   // early out if we know we can't make it anyway
   // we could also check for being within FEE_PER_KB, but if the fee calculation
   // ever changes, this might be missed, so let this go through
-  const uint64_t min_fee = (base_fee * estimate_tx_size(use_rct, 1, fake_outs_count, 2, extra.size(), bulletproof, clsag, bulletproof_plus, use_view_tags));
+  const uint64_t min_fee = ((base_fee / 1000) * estimate_tx_size(use_rct, 1, fake_outs_count, 2, extra.size(), bulletproof, clsag, bulletproof_plus, use_view_tags));
   total_needed_money = needed_money + (subtract_fee_from_outputs.size() ? 0 : min_fee);
   uint64_t balance_subtotal = 0;
   uint64_t unlocked_balance_subtotal = 0;
