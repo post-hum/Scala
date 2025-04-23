@@ -33,6 +33,7 @@ set(blockchain_import_sources
   )
 
 set(blockchain_import_private_headers
+  blockchain_import.h
   bootstrap_file.h
   blocksdat_file.h
   bootstrap_serialization.h
@@ -139,6 +140,7 @@ scala_add_executable(blockchain_import
 
 target_link_libraries(blockchain_import
   PRIVATE
+    libipfs
     cryptonote_core
     blockchain_db
     version

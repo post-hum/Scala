@@ -48,6 +48,7 @@ scala_add_executable(daemon
 target_link_libraries(daemon
   PRIVATE
     rpc
+    libipfs
     blockchain_db
     cryptonote_core
     cncrypto

@@ -470,7 +470,7 @@ endif()
 # elseif(CMAKE_SYSTEM_NAME MATCHES ".*BSDI.*")
 #   set(BSDI TRUE)
 
-include_directories(external/rapidjson/include external/easylogging++ src contrib/epee/include external external/supercop/include)
+include_directories(external/rapidjson/include external/easylogging++ src contrib/epee/include external external/supercop/include external/libipfs)
 
 if(APPLE)
   cmake_policy(SET CMP0042 NEW)

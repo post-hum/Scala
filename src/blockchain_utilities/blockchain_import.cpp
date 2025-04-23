@@ -33,6 +33,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
+#include <rapidjson/document.h>
 #include <unistd.h>
 #include "misc_log_ex.h"
 #include "bootstrap_file.h"
@@ -43,6 +44,7 @@
 #include "serialization/json_utils.h" // dump_json()
 #include "include_base_utils.h"
 #include "cryptonote_core/cryptonote_core.h"
+#include "blockchain_import.h"
 
 #undef SCALA_DEFAULT_LOG_CATEGORY
 #define SCALA_DEFAULT_LOG_CATEGORY "bcutil"
@@ -53,6 +55,7 @@ namespace
 bool opt_batch   = true;
 bool opt_verify  = true; // use add_new_block, which does verification before calling add_block
 bool opt_resume  = true;
+bool opt_ipfs_import = false;
 bool opt_testnet = true;
 bool opt_stagenet = true;
 
@@ -68,6 +71,7 @@ uint64_t db_batch_size = 100;
 // when verifying, use a smaller default batch size so progress is more
 // frequently saved
 uint64_t db_batch_size_verify = 5000;
+uint64_t ipfs_port = 4006;
 
 std::string refresh_string = "\r                                    \r";
 }
@@ -587,7 +591,9 @@ int main(int argc, char* argv[])
   const command_line::arg_descriptor<uint64_t> arg_block_stop  = {"block-stop", "Stop at block number", block_stop};
   const command_line::arg_descriptor<uint64_t> arg_batch_size  = {"batch-size", "", db_batch_size};
   const command_line::arg_descriptor<uint64_t> arg_pop_blocks  = {"pop-blocks", "Remove blocks from end of blockchain", num_blocks};
-  const command_line::arg_descriptor<bool>        arg_drop_hf  = {"drop-hard-fork", "Drop hard fork subdbs", false};
+  const command_line::arg_descriptor<bool>     arg_drop_hf  = {"drop-hard-fork", "Drop hard fork subdbs", false};
+  const command_line::arg_descriptor<bool>     arg_ipfs_import  = {"ipfs-import", "Download blockchain and import from IPFS", false};
+  const command_line::arg_descriptor<uint64_t> arg_ipfs_port   = {"ipfs-port",  "IPFS P2P Port", ipfs_port};
   const command_line::arg_descriptor<bool>     arg_count_blocks = {
     "count-blocks"
       , "Count blocks in bootstrap file and exit"
@@ -604,7 +610,9 @@ int main(int argc, char* argv[])
   command_line::add_arg(desc_cmd_sett, arg_log_level);
   command_line::add_arg(desc_cmd_sett, arg_batch_size);
   command_line::add_arg(desc_cmd_sett, arg_block_stop);
+  command_line::add_arg(desc_cmd_sett, arg_ipfs_port);
 
+  command_line::add_arg(desc_cmd_only, arg_ipfs_import);
   command_line::add_arg(desc_cmd_only, arg_count_blocks);
   command_line::add_arg(desc_cmd_only, arg_pop_blocks);
   command_line::add_arg(desc_cmd_only, arg_drop_hf);
@@ -635,8 +643,10 @@ int main(int argc, char* argv[])
   opt_verify    = !command_line::get_arg(vm, arg_noverify);
   opt_batch     = command_line::get_arg(vm, arg_batch);
   opt_resume    = command_line::get_arg(vm, arg_resume);
+  opt_ipfs_import = command_line::get_arg(vm, arg_resume);
   block_stop    = command_line::get_arg(vm, arg_block_stop);
   db_batch_size = command_line::get_arg(vm, arg_batch_size);
+  ipfs_port = command_line::get_arg(vm, arg_ipfs_port);
 
   if (command_line::get_arg(vm, command_line::arg_help))
   {
@@ -694,6 +704,64 @@ int main(int argc, char* argv[])
 
   import_file_path = fs_import_file_path.string();
 
+  if (command_line::has_arg(vm, arg_ipfs_import))
+  {
+      opt_verify = false;
+      boost::filesystem::path ipfs_path = boost::filesystem::path(m_config_folder) / "ipfs";
+      std::string ipfs_path_str = ipfs_path.string();
+      std::string startResult = Start(const_cast<char*>(ipfs_path_str.c_str()), ipfs_port);
+  
+      rapidjson::Document doc;
+      if (doc.Parse(startResult.c_str()).HasParseError()) {
+          MGINFO("IPFS start response parse error");
+          return 0;
+      }
+  
+      bool fail = false;
+  
+      if (doc.HasMember("Status") && doc["Status"].IsString() &&
+          std::string(doc["Status"].GetString()) == "success" &&
+          doc.HasMember("Data") && doc["Data"].IsObject()) {
+  
+          const auto& data = doc["Data"].GetObject();
+          if (data.HasMember("peerId") && data["peerId"].IsString()) {
+              MGINFO("IPFS Started with Peer ID: " << data["peerId"].GetString());
+  
+              if (boost::filesystem::exists(import_file_path)) {
+                  boost::filesystem::remove(import_file_path);
+              }
+  
+              MGINFO("Downloading blockchain from IPFS, this might take a few minutes..");
+  
+              const std::string getCid = "/ipfs/bafybeifeawdqfnimr2fuuq526vkwbewyy7c2hdwu35gylyuy4pcyfhdwli";
+              std::string downloadResult = Get((char*)getCid.c_str(), (char*)import_file_path.c_str(), true);
+  
+              rapidjson::Document dlDoc;
+              if (dlDoc.Parse(downloadResult.c_str()).HasParseError()) {
+                  MGINFO("Download result parse error");
+                  return 0;
+              }
+  
+              if (dlDoc.HasMember("Status") && dlDoc["Status"].IsString() &&
+                  std::string(dlDoc["Status"].GetString()) == "success") {
+                  MGINFO("Blockchain downloaded from IPFS");
+              } else {
+                  MGINFO("Blockchain download failed");
+              }
+  
+          } else {
+              fail = true;
+          }
+      } else {
+          fail = true;
+      }
+  
+      if (fail) {
+          MGINFO("IPFS failed to initialize, exiting!");
+          return 0;
+      }
+  }
+
   if (command_line::has_arg(vm, arg_count_blocks))
   {
     BootstrapFile bootstrap;
@@ -718,7 +786,7 @@ int main(int argc, char* argv[])
   MINFO("bootstrap file path: " << import_file_path);
   MINFO("database path:       " << m_config_folder);
 
-  if (!opt_verify)
+  if (!opt_verify && !opt_ipfs_import)
   {
     MCLOG_RED(el::Level::Warning, "global", "\n"
       "Import is set to proceed WITHOUT VERIFICATION.\n"

@@ -30,7 +30,6 @@
 
 #include "version.h"
 
-
 // bounds checking is done before writing to buffer, but buffer size
 // should be a sensible maximum
 #define BUFFER_SIZE (2 * 1024 * 1024)

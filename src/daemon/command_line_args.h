@@ -132,15 +132,33 @@ namespace daemon_args
     }
   };
   const command_line::arg_descriptor<std::vector<std::string>> arg_zmq_pub = {
-    "zmq-pub"
-  , "Address for ZMQ pub - tcp://ip:port or ipc://path"
+    "zmq-pub", 
+    "Address for ZMQ pub - tcp://ip:port or ipc://path"
   };
 
   const command_line::arg_descriptor<bool> arg_zmq_rpc_disabled = {
-    "no-zmq"
-  , "Disable ZMQ RPC server"
+    "no-zmq", 
+    "Disable ZMQ RPC server"
   };
 
+  const command_line::arg_descriptor<bool> arg_ipfs_enabled = {
+    "enable-ipfs",
+    "Enable IPFS"
+  };
+
+  const command_line::arg_descriptor<std::string, false, true, 2> arg_ipfs_bind_port = {
+    "ipfs-bind-port"
+  , "Port for IPFS P2P to listen on"
+  , std::to_string(config::IPFS_P2P_DEFAULT_PORT)
+  , {{ &cryptonote::arg_testnet_on, &cryptonote::arg_stagenet_on }}
+  , [](std::array<bool, 2> testnet_stagenet, bool defaulted, std::string val)->std::string {
+      if (testnet_stagenet[0] && defaulted)
+        return std::to_string(config::testnet::IPFS_P2P_DEFAULT_PORT);
+      if (testnet_stagenet[1] && defaulted)
+        return std::to_string(config::stagenet::IPFS_P2P_DEFAULT_PORT);
+      return val;
+    }
+  };
 }  // namespace daemon_args
 
 #endif // DAEMON_COMMAND_LINE_ARGS_H
