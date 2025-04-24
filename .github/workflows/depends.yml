@@ -22,7 +22,7 @@ jobs:
   build-cross:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:22.04
+      image: ubuntu:20.04
       env:
         DEBIAN_FRONTEND: noninteractive
         CCACHE_TEMPDIR: /tmp/.ccache-temp
@@ -32,35 +32,31 @@ jobs:
         toolchain:
           - name: "RISCV 64bit"
             host: "riscv64-linux-gnu"
-            packages: "python3 gperf g++-riscv64-linux-gnu"
+            packages: "g++-riscv64-linux-gnu"
           - name: "ARM v8"
             host: "aarch64-linux-gnu"
-            packages: "python3 gperf g++-aarch64-linux-gnu"
+            packages: "g++-aarch64-linux-gnu"
           - name: "Win64"
             host: "x86_64-w64-mingw32"
-            packages: "cmake python3 g++-mingw-w64-x86-64"
+            packages: "g++-mingw-w64-x86-64"
           - name: "x86_64 Linux"
             host: "x86_64-unknown-linux-gnu"
-            packages: "gperf cmake python3-zmq libdbus-1-dev libharfbuzz-dev"
           - name: "Cross-Mac x86_64"
             host: "x86_64-apple-darwin11"
-            packages: "cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools python-dev-is-python3 python3-setuptools-git libtinfo5"
+            packages: "clang"
           - name: "Cross-Mac aarch64"
             host: "aarch64-apple-darwin11"
-            packages: "cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools python-dev-is-python3 python3-setuptools-git libtinfo5"
+            packages: "clang"
           - name: "x86_64 Freebsd"
             host: "x86_64-unknown-freebsd"
-            packages: "clang gperf cmake python3-zmq libdbus-1-dev libharfbuzz-dev"
+            packages: "clang"
     name: ${{ matrix.toolchain.name }}
     steps:
     - name: set apt conf
       run: ${{env.APT_SET_CONF}}
-
     - name: install dependencies
       run: |
-        apt update
-        apt -y install build-essential libtool cmake autotools-dev automake pkg-config python3 gperf bsdmainutils curl git ca-certificates unzip ccache ${{ matrix.toolchain.packages }}
-
+        apt update; apt -y install build-essential libtool cmake autotools-dev automake pkg-config python3 gperf bsdmainutils curl git ca-certificates unzip ccache ${{ matrix.toolchain.packages }}
     - name: install Go 1.23.8
       run: |
         curl -LO https://go.dev/dl/go1.23.8.linux-amd64.tar.gz
