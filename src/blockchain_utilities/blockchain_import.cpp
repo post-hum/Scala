@@ -26,16 +26,19 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include <rapidjson/document.h>
 #include <atomic>
 #include <cstdio>
 #include <algorithm>
 #include <fstream>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
-#include <rapidjson/document.h>
 #include <unistd.h>
+#include <thread>
 #include "misc_log_ex.h"
+#undef GetObject
 #include "bootstrap_file.h"
 #include "bootstrap_serialization.h"
 #include "blocks/blocks.h"
@@ -703,6 +706,106 @@ int main(int argc, char* argv[])
     fs_import_file_path = boost::filesystem::path(m_config_folder) / "export" / BLOCKCHAIN_RAW;
 
   import_file_path = fs_import_file_path.string();
+
+
+  if (command_line::has_arg(vm, arg_ipfs_import))
+  {
+      std::atomic<bool> downloadInProgress(true);
+      
+      boost::filesystem::path export_path = boost::filesystem::path(m_config_folder) / "export";
+      if (!boost::filesystem::exists(export_path))
+      {
+          boost::filesystem::create_directories(export_path);
+      }
+
+      opt_verify = false;
+      boost::filesystem::path ipfs_path = boost::filesystem::path(m_config_folder) / "ipfs";
+      std::string ipfs_path_str = ipfs_path.string();
+      std::string startResult = Start(const_cast<char*>(ipfs_path_str.c_str()), ipfs_port);
+  
+      rapidjson::Document doc;
+      if (doc.Parse(startResult.c_str()).HasParseError()) {
+          MGINFO("IPFS start response parse error");
+          return 0;
+      }
+  
+      bool fail = false;
+  
+      if (doc.HasMember("Status") && doc["Status"].IsString() &&
+          std::string(doc["Status"].GetString()) == "success" &&
+          doc.HasMember("Data") && doc["Data"].IsObject()) {
+          const rapidjson::Value& dataVal = doc["Data"];
+          if (dataVal.IsObject()) {
+              const auto& data = dataVal.GetObject();
+              if (data.HasMember("peerId") && data["peerId"].IsString()) {
+                MGINFO("IPFS Started with Peer ID: " << data["peerId"].GetString());
+    
+                if (boost::filesystem::exists(import_file_path)) {
+                    boost::filesystem::remove(import_file_path);
+                }
+
+                std::thread progressThread([&]() {
+                  using boost::posix_time::ptime;
+                  using boost::posix_time::microsec_clock;
+                  using boost::posix_time::time_duration;
+                  using boost::posix_time::to_tm;
+              
+                  while (downloadInProgress) {
+                      if (boost::filesystem::exists(import_file_path)) {
+                          std::uintmax_t size = boost::filesystem::file_size(import_file_path);
+              
+                          ptime now = microsec_clock::local_time();
+                          time_duration td = now.time_of_day();
+                          struct tm tm_now = to_tm(now);
+              
+                          std::ostringstream time_ss;
+                          time_ss << std::put_time(&tm_now, "%Y-%m-%d %H:%M:%S")
+                                  << '.' << std::setw(3) << std::setfill('0') << td.total_milliseconds() % 1000;
+              
+                          std::ostringstream oss;
+                          oss << time_ss.str() << " I Downloaded: " << (size / (1024 * 1024)) << " MB";
+              
+                          std::cout << "\r" << oss.str() << std::flush;
+                      }
+              
+                      std::this_thread::sleep_for(std::chrono::seconds(1));
+                  }
+              });
+    
+                MGINFO("Downloading blockchain from IPFS, this might take a few minutes..");
+    
+                const std::string getCid = "/ipns/blockchain.raw.scala.network";
+                std::string downloadResult = Get((char*)getCid.c_str(), (char*)import_file_path.c_str(), true);
+                downloadInProgress = false;
+                progressThread.join();
+    
+                rapidjson::Document dlDoc;
+                if (dlDoc.Parse(downloadResult.c_str()).HasParseError()) {
+                    MGINFO("Download result parse error");
+                    return 0;
+                }
+    
+                if (dlDoc.HasMember("Status") && dlDoc["Status"].IsString() &&
+                    std::string(dlDoc["Status"].GetString()) == "success") {
+                    MGINFO("Blockchain downloaded from IPFS");
+                } else {
+                    MGINFO("Blockchain download failed");
+                }
+    
+            } else {
+                fail = true;
+            }
+          }
+      } else {
+          fail = true;
+      }
+  
+      if (fail) {
+          MGINFO("IPFS failed to initialize, exiting!");
+          return 0;
+      }
+  }
+
 
   if (command_line::has_arg(vm, arg_ipfs_import))
   {
