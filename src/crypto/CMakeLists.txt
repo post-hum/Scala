@@ -73,7 +73,7 @@ target_link_libraries(cncrypto
     randomx
     felidae
     ${Boost_SYSTEM_LIBRARY}
-    ${SODIUM_LIBRARY}
+    ${sodium_LIBRARIES}
   PRIVATE
     ${EXTRA_LIBRARIES})
 
