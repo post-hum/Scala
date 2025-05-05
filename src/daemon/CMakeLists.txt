@@ -71,7 +71,7 @@ target_link_libraries(daemon
     $<TARGET_NAME_IF_EXISTS:blocks>)
 
 if(NOT ANDROID)
-    target_link_libraries(blockchain_import PRIVATE libipfs)
+    target_link_libraries(daemon PRIVATE libipfs)
 endif()
 
 set_property(TARGET daemon
