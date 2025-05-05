@@ -48,7 +48,6 @@ scala_add_executable(daemon
 target_link_libraries(daemon
   PRIVATE
     rpc
-    libipfs
     blockchain_db
     cryptonote_core
     cncrypto
@@ -70,6 +69,11 @@ target_link_libraries(daemon
     ${GNU_READLINE_LIBRARY}
     ${EXTRA_LIBRARIES}
     $<TARGET_NAME_IF_EXISTS:blocks>)
+
+if(NOT ANDROID)
+    target_link_libraries(blockchain_import PRIVATE libipfs)
+endif()
+
 set_property(TARGET daemon
   PROPERTY
     OUTPUT_NAME "scalad")

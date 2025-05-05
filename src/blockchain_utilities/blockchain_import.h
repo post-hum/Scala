@@ -29,5 +29,9 @@
 #pragma once
 
 #include "version.h"
-#include "libipfs.h"
+
+#if !defined(__ANDROID__)
+    #include "libipfs.h"
+#endif
+
 

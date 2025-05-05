@@ -28,7 +28,10 @@
 
 #pragma once
 #include <boost/program_options.hpp>
-#include "libipfs.h"
+
+#if !defined(__ANDROID__)
+    #include "libipfs.h"
+#endif
 
 #undef SCALA_DEFAULT_LOG_CATEGORY
 #define SCALA_DEFAULT_LOG_CATEGORY "daemon"

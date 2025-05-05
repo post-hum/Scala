@@ -140,7 +140,6 @@ scala_add_executable(blockchain_import
 
 target_link_libraries(blockchain_import
   PRIVATE
-    libipfs
     cryptonote_core
     blockchain_db
     version
@@ -152,6 +151,10 @@ target_link_libraries(blockchain_import
     ${EXTRA_LIBRARIES}
     $<TARGET_NAME_IF_EXISTS:blocks>)
 
+if(NOT ANDROID)
+    target_link_libraries(blockchain_import PRIVATE libipfs)
+endif()
+  
 if(ARCH_WIDTH)
   target_compile_definitions(blockchain_import
     PUBLIC -DARCH_WIDTH=${ARCH_WIDTH})

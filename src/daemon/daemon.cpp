@@ -125,21 +125,25 @@ public:
       }
     }
 
-    if (!command_line::get_arg(vm, daemon_args::arg_ipfs_enabled))
-    {
-      MGINFO("IPFS disabled");
-    } else {
-      boost::filesystem::path data_dir = boost::filesystem::absolute(
-        command_line::get_arg(vm, cryptonote::arg_data_dir));
-      boost::filesystem::path ipfs_dir = data_dir / "ipfs";
-      std::string ipfs_path_str = ipfs_dir.string();
-      const std::string ipfs_p2p_port_str = command_line::get_arg(vm, daemon_args::arg_ipfs_bind_port);
-      int ipfs_p2p_port = std::stoi(ipfs_p2p_port_str);
-      
-      Start(const_cast<char*>(ipfs_path_str.c_str()), ipfs_p2p_port);
+    #if !defined(__ANDROID__)
+      if (!command_line::get_arg(vm, daemon_args::arg_ipfs_enabled))
+      {
+        MGINFO("IPFS disabled");
+      } else {
+        boost::filesystem::path data_dir = boost::filesystem::absolute(
+          command_line::get_arg(vm, cryptonote::arg_data_dir));
+        boost::filesystem::path ipfs_dir = data_dir / "ipfs";
+        std::string ipfs_path_str = ipfs_dir.string();
+        const std::string ipfs_p2p_port_str = command_line::get_arg(vm, daemon_args::arg_ipfs_bind_port);
+        int ipfs_p2p_port = std::stoi(ipfs_p2p_port_str);
+        
+        Start(const_cast<char*>(ipfs_path_str.c_str()), ipfs_p2p_port);
 
-      MGINFO("IPFS initialized OK on port: " << ipfs_p2p_port);
-    }
+        MGINFO("IPFS initialized OK on port: " << ipfs_p2p_port);
+      }
+    #elif
+      MGINFO("IPFS disabled on Android");
+    #endif
   }
 };
 
