@@ -109,10 +109,10 @@ jobs:
 
   build-debian:
     # Oldest supported Debian version
-    name: 'Debian 12'
+    name: 'Debian 11'
     runs-on: ubuntu-latest
     container:
-      image: debian:12
+      image: debian:11
       env:
         DEBIAN_FRONTEND: noninteractive
     steps:
