@@ -165,12 +165,17 @@ Dates are provided in the format YYYY-MM-DD.
 | 2210000                        | 2020-10-17 | v13               | v0.17.0.0              | v0.17.3.2                  | New CLSAG transaction format
 | 2210720                        | 2020-10-18 | v14               | v0.17.1.1              | v0.17.3.2                  | forbid old MLSAG transaction format
 <<<<<<< HEAD
+<<<<<<< HEAD
 | 2688888                        | 2022-08-13 | v15               | v0.18.0.0              | v0.18.3.4                  | ringsize = 16, bulletproofs+, view tags, adjusted dynamic block weight algorithm
 | 2689608                        | 2022-08-14 | v16               | v0.18.0.0              | v0.18.3.4                  | forbid old v14 transaction format
 =======
 | 2688888                        | 2022-08-13 | v15               | v0.18.0.0              | v0.18.4.1                  | ringsize = 16, bulletproofs+, view tags, adjusted dynamic block weight algorithm
 | 2689608                        | 2022-08-14 | v16               | v0.18.0.0              | v0.18.4.1                  | forbid old v14 transaction format
 >>>>>>> b96af8e17 (build: prepare v0.18.4.1)
+=======
+| 2688888                        | 2022-08-13 | v15               | v0.18.0.0              | v0.18.4.2                  | ringsize = 16, bulletproofs+, view tags, adjusted dynamic block weight algorithm
+| 2689608                        | 2022-08-14 | v16               | v0.18.0.0              | v0.18.4.2                  | forbid old v14 transaction format
+>>>>>>> 32f701b0c (build: prepare v0.18.4.2)
 | XXXXXXX                        | XXX-XX-XX | XXX                | vX.XX.X.X              | vX.XX.X.X                  | XXX |
 
 X's indicate that these details have not been determined as of commit date.
@@ -380,8 +385,12 @@ Tested on a Raspberry Pi Zero with a clean install of minimal Raspbian Stretch (
 =======
     git clone https://github.com/monero-project/monero.git
     cd monero
+<<<<<<< HEAD
     git checkout v0.18.4.1
 >>>>>>> b96af8e17 (build: prepare v0.18.4.1)
+=======
+    git checkout v0.18.4.2
+>>>>>>> 32f701b0c (build: prepare v0.18.4.2)
     ```
 
 * Build:
@@ -501,6 +510,7 @@ application.
     ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 * If you would like a specific [version/tag](https://github.com/scala-project/scala/tags), do a git checkout for that version. eg. 'v0.18.3.4'. If you don't care about the version and just want binaries from master, skip this step:
 
     ```bash
@@ -511,6 +521,12 @@ application.
     ```bash
     git checkout v0.18.4.1
 >>>>>>> b96af8e17 (build: prepare v0.18.4.1)
+=======
+* If you would like a specific [version/tag](https://github.com/monero-project/monero/tags), do a git checkout for that version. eg. 'v0.18.4.2'. If you don't care about the version and just want binaries from master, skip this step:
+
+    ```bash
+    git checkout v0.18.4.2
+>>>>>>> 32f701b0c (build: prepare v0.18.4.2)
     ```
 
 * If you are on a 64-bit system, run:
