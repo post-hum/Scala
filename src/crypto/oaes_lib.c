@@ -32,6 +32,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#ifdef OAES_HAVE_ISAAC
+#include "rand.h"
+#else
+#include "crypto/crypto.h"
+#endif
 
 // OS X, FreeBSD, OpenBSD and NetBSD don't need malloc.h
 #if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__OpenBSD__) \
@@ -656,7 +661,7 @@ static OAES_RET oaes_key_gen( OAES_CTX * ctx, size_t key_size )
 #ifdef OAES_HAVE_ISAAC
 		_key->data[_i] = (uint8_t) rand( _ctx->rctx );
 #else
-		_key->data[_i] = (uint8_t) rand();
+		_key->data[_i] = (uint8_t) crypto::rand<uint8_t>();
 #endif // OAES_HAVE_ISAAC
 	
 	_ctx->key = _key;
