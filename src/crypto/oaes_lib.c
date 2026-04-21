@@ -657,11 +657,11 @@ static OAES_RET oaes_key_gen( OAES_CTX * ctx, size_t key_size )
 		return OAES_RET_MEM;
 	}
 	
-#ifndef OAES_HAVE_ISAAC
-	generate_random_bytes(_key->data, key_size);
+#ifdef OAES_HAVE_ISAAC
+     generate_random_bytes(_key->data, key_size);
 #else
-	for(_i = 0; _i < key_size; _i++)
-		_key->data[_i] = (uint8_t) rand(_ctx->rctx);
+     for( _i = 0; _i < key_size; _i++ )
+		 _key->data[_i] = (uint8_t) rand();
 #endif
 	
 	_ctx->key = _key;
