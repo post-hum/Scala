@@ -1,19 +1,19 @@
-/*
+/* 
  * ---------------------------------------------------------------------------
  * OpenAES License
  * ---------------------------------------------------------------------------
  * Copyright (c) 2012, Nabil S. Al Ramli, www.nalramli.com
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  *   - Redistributions of source code must retain the above copyright notice,
  *     this list of conditions and the following disclaimer.
  *   - Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,7 +28,7 @@
  * ---------------------------------------------------------------------------
  */
 #include <stddef.h>
-#include <time.h>
+#include <time.h> 
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -63,7 +63,6 @@
 #include "oaes_config.h"
 #include "oaes_lib.h"
 
-// Project cryptographic secure RNG
 #include "random.h"
 
 #define OAES_RKEY_LEN 4
@@ -470,6 +469,7 @@ OAES_RET oaes_sprintf(
 	return OAES_RET_SUCCESS;
 }
 
+
 static OAES_RET oaes_key_destroy( oaes_key ** key )
 {
 	if( NULL == *key )
@@ -825,6 +825,7 @@ OAES_CTX * oaes_alloc(void)
 	if( NULL == _ctx )
 		return NULL;
 
+
 	_ctx->key = NULL;
 	oaes_set_option( _ctx, OAES_OPTION_CBC, NULL );
 
@@ -849,6 +850,7 @@ OAES_RET oaes_free( OAES_CTX ** ctx )
 	if( (*_ctx)->key )
 		oaes_key_destroy( &((*_ctx)->key) );
 
+	
 	free( *_ctx );
 	*_ctx = NULL;
 
@@ -858,6 +860,7 @@ OAES_RET oaes_free( OAES_CTX ** ctx )
 OAES_RET oaes_set_option( OAES_CTX * ctx,
 		OAES_OPTION option, const void * value )
 {
+	size_t _i;
 	oaes_ctx * _ctx = (oaes_ctx *) ctx;
 	
 	if( NULL == _ctx )
