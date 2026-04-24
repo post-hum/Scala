@@ -3,18 +3,18 @@ name: ci/gh-actions/cli
 on:
   push:
     paths-ignore:
-      - 'docs/**'
-      - '**/README.md'
+      - "docs/**"
+      - "**/README.md"
   pull_request:
     paths-ignore:
-      - 'docs/**'
-      - '**/README.md'
+      - "docs/**"
+      - "**/README.md"
 
 # The below variables reduce repetitions across similar targets
 env:
   # ARCH="default" (not "native") ensures, that a different execution host can execute binaries compiled elsewhere.
   BUILD_DEFAULT_LINUX: 'cmake -S . -B build -D ARCH="default" -D BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=Release && cmake --build build --target all && cmake --build build --target wallet_api'
-  APT_INSTALL_LINUX: 'apt -y install curl build-essential cmake libboost-all-dev miniupnpc libunbound-dev graphviz doxygen libunwind8-dev pkg-config libssl-dev libzmq3-dev libsodium-dev libhidapi-dev libusb-1.0-0-dev libprotobuf-dev protobuf-compiler ccache git'
+  APT_INSTALL_LINUX: "apt -y install curl build-essential cmake libboost-all-dev miniupnpc libunbound-dev graphviz doxygen libunwind8-dev pkg-config libssl-dev libzmq3-dev libsodium-dev libhidapi-dev libusb-1.0-0-dev libprotobuf-dev protobuf-compiler ccache git"
   APT_SET_CONF: |
     tee -a /etc/apt/apt.conf.d/80-custom << EOF
     Acquire::Retries "3";
@@ -27,7 +27,7 @@ env:
 
 jobs:
   build-macos:
-    name: 'macOS (brew)'
+    name: "macOS (brew)"
     runs-on: macOS-latest
     env:
       CCACHE_TEMPDIR: /tmp/.ccache-temp
@@ -56,7 +56,7 @@ jobs:
           make -j${{env.MAKE_JOB_COUNT}}
 
   build-windows:
-    name: 'Windows (MSYS2)'
+    name: "Windows (MSYS2)"
     runs-on: windows-latest
     env:
       CCACHE_TEMPDIR: C:\Users\runneradmin\.ccache-temp
@@ -84,13 +84,13 @@ jobs:
           make release-static -j${{env.MAKE_JOB_COUNT}}
 
   build-arch:
-    name: 'Arch Linux'
+    name: "Arch Linux"
     runs-on: ubuntu-latest
     container:
       image: archlinux:latest
     steps:
       - name: install dependencies
-        run: pacman -Syyu --noconfirm curl base-devel git cmake boost openssl zeromq unbound libsodium readline expat gtest python3 doxygen graphviz hidapi libusb protobuf
+        run: pacman -Syyu --noconfirm curl base-devel git cmake boost boost-libs openssl zeromq unbound libsodium readline expat gtest python3 doxygen graphviz hidapi libusb protobuf pkgconf ccache
       - name: Install Go 1.23.8
         run: |
           curl -LO https://go.dev/dl/go1.23.8.linux-amd64.tar.gz
@@ -110,7 +110,7 @@ jobs:
 
   build-debian:
     # Oldest supported Debian version
-    name: 'Debian 11'
+    name: "Debian 11"
     runs-on: ubuntu-latest
     container:
       image: debian:11
