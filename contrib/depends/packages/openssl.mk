@@ -50,7 +50,6 @@ endef
 
 define $(package)_preprocess_cmds
   sed -i.old 's|crypto ssl apps util tools fuzz providers doc|crypto ssl util tools providers|' build.info && \
-  patch -p1 < $($(package)_patch_dir)/fix-android.patch
 endef
 
 define $(package)_config_cmds
