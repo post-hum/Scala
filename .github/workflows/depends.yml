@@ -14,18 +14,14 @@ env:
     Acquire::http::Timeout "120";
     Acquire::ftp::Timeout "120";
     EOF
+
   CCACHE_SETTINGS: |
     ccache --max-size=150M
     ccache --set-config=compression=true
 
 jobs:
-  build-cross:
+  build-linux:
     runs-on: ubuntu-latest
-    container:
-      image: ubuntu:20.04
-      env:
-        DEBIAN_FRONTEND: noninteractive
-        CCACHE_TEMPDIR: /tmp/.ccache-temp
     strategy:
       fail-fast: false
       matrix:
@@ -33,40 +29,39 @@ jobs:
           - name: "RISCV 64bit"
             host: "riscv64-linux-gnu"
             packages: "g++-riscv64-linux-gnu"
+
           - name: "ARM v8"
             host: "aarch64-linux-gnu"
             packages: "g++-aarch64-linux-gnu"
+
+          - name: "x86_64 Linux"
+            host: "x86_64-unknown-linux-gnu"
+
           - name: "Win64"
             host: "x86_64-w64-mingw32"
             packages: "g++-mingw-w64-x86-64"
-          - name: "x86_64 Linux"
-            host: "x86_64-unknown-linux-gnu"
-          - name: "Cross-Mac x86_64"
-            host: "x86_64-apple-darwin"
-            packages: "clang"
-          - name: "Cross-Mac aarch64"
-            host: "arm64-apple-darwin"
-            packages: "clang"
-          - name: "x86_64 Freebsd"
-            host: "x86_64-unknown-freebsd"
-            packages: "clang"
+
     name: ${{ matrix.toolchain.name }}
+
     steps:
-      - name: set apt conf
-        run: ${{env.APT_SET_CONF}}
       - name: install dependencies
         run: |
-          apt update; apt -y install build-essential libtool cmake autotools-dev automake pkg-config python3 gperf bsdmainutils curl git ca-certificates unzip ccache ${{ matrix.toolchain.packages }}
-      - name: install Go 1.23.8
-        run: |
-          curl -LO https://go.dev/dl/go1.23.8.linux-amd64.tar.gz
-          tar -C /usr/local -xzf go1.23.8.linux-amd64.tar.gz
-          echo "/usr/local/go/bin" >> $GITHUB_PATH
-          export PATH=$PATH:/usr/local/go/bin
-          go version
+          set -euxo pipefail
+          ${{env.APT_SET_CONF}}
 
-      - name: configure git
-        run: git config --global --add safe.directory '*'
+          sudo apt update
+          sudo apt -y install \
+            build-essential libtool cmake autotools-dev automake pkg-config \
+            python3 gperf bsdmainutils curl git ca-certificates unzip ccache \
+            ${{ matrix.toolchain.packages }}
+
+      - name: install Go
+        run: |
+          set -euxo pipefail
+          curl -LO https://go.dev/dl/go1.23.8.linux-amd64.tar.gz
+          sudo tar -C /usr/local -xzf go1.23.8.linux-amd64.tar.gz
+          echo "/usr/local/go/bin" >> $GITHUB_PATH
+          go version
 
       - uses: actions/checkout@v4
         with:
@@ -85,31 +80,55 @@ jobs:
         with:
           path: contrib/depends/built
           key: depends-${{ matrix.toolchain.host }}-${{ hashFiles('contrib/depends/packages/*') }}
-          restore-keys: |
-            depends-${{ matrix.toolchain.host }}-${{ hashFiles('contrib/depends/packages/*') }}
-            depends-${{ matrix.toolchain.host }}-
+          restore-keys: depends-${{ matrix.toolchain.host }}-
 
-      - name: OSX SDK cache
-        uses: actions/cache@v4
-        with:
-          path: contrib/depends/sdk-sources
-          key: sdk-${{ matrix.toolchain.host }}-${{ matrix.toolchain.osx_sdk }}
-          restore-keys: sdk-${{ matrix.toolchain.host }}-${{ matrix.toolchain.osx_sdk }}
-
-      - name: prepare w64-mingw32
-        if: ${{ matrix.toolchain.host == 'x86_64-w64-mingw32' || matrix.toolchain.host == 'i686-w64-mingw32' }}
+      - name: build depends
         run: |
-          update-alternatives --set ${{ matrix.toolchain.host }}-g++ $(which ${{ matrix.toolchain.host }}-g++-posix)
-          update-alternatives --set ${{ matrix.toolchain.host }}-gcc $(which ${{ matrix.toolchain.host }}-gcc-posix)
-
-      - name: build
-        run: |
+          set -euxo pipefail
           ${{env.CCACHE_SETTINGS}}
-          rm -rf contrib/depends/built
-          make depends target=${{ matrix.toolchain.host }} NO_QT=1 NO_STATIC=1 -j4
 
-      - uses: actions/upload-artifact@v4
+          rm -rf contrib/depends/built
+
+          make depends \
+            target=${{ matrix.toolchain.host }} \
+            -j$(nproc)
+
+  build-macos:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        toolchain:
+          - name: "Cross-Mac x86_64"
+            host: "x86_64-apple-darwin"
+
+          - name: "Cross-Mac arm64"
+            host: "arm64-apple-darwin"
+
+    name: ${{ matrix.toolchain.name }}
+
+    steps:
+      - uses: actions/checkout@v4
         with:
-          name: ${{ matrix.toolchain.name }}
-          path: |
-            build/${{ matrix.toolchain.host }}/release/bin/*
+          submodules: recursive
+
+      - name: install dependencies
+        run: |
+          set -euxo pipefail
+          brew update
+          brew install ccache cmake boost openssl zeromq libsodium
+
+      - name: ccache
+        run: |
+          ccache --max-size=150M
+          ccache --set-config=compression=true
+
+      - name: build depends
+        run: |
+          set -euxo pipefail
+
+          rm -rf contrib/depends/built
+
+          make depends \
+            target=${{ matrix.toolchain.host }} \
+            -j$(sysctl -n hw.ncpu)
