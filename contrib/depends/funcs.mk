@@ -21,18 +21,18 @@ $(sort $(foreach dep,$(2),$(2) $(call int_get_all_dependencies,$(1),$($(dep)_dep
 endef
 
 define fetch_file_inner
-    ( mkdir -p $$($(1)_download_dir) && echo Fetching $(3) from $(2) && \
-    $(build_DOWNLOAD) "$$($(1)_download_dir)/$(4).temp" "$(2)/$(3)" && \
-    echo "$(5)  $$($(1)_download_dir)/$(4).temp" > $$($(1)_download_dir)/.$(4).hash && \
-    $(build_SHA256SUM) -c $$($(1)_download_dir)/.$(4).hash && \
-    mv $$($(1)_download_dir)/$(4).temp $$($(1)_source_dir)/$(4) && \
-    rm -rf $$($(1)_download_dir) )
+	( mkdir -p $$($(1)_download_dir) && echo Fetching $(3) from $(2) && \
+	$(build_DOWNLOAD) "$$($(1)_download_dir)/$(4).temp" "$(2)/$(3)" && \
+	echo "$(5)  $$($(1)_download_dir)/$(4).temp" > $$($(1)_download_dir)/.$(4).hash && \
+	$(build_SHA256SUM) -c $$($(1)_download_dir)/.$(4).hash && \
+	mv $$($(1)_download_dir)/$(4).temp $$($(1)_source_dir)/$(4) && \
+	rm -rf $$($(1)_download_dir) )
 endef
 
 define fetch_file
-    ( test -f $$($(1)_source_dir)/$(4) || \
-    ( $(call fetch_file_inner,$(1),$(2),$(3),$(4),$(5)) || \
-      $(call fetch_file_inner,$(1),$(FALLBACK_DOWNLOAD_PATH),$(4),$(4),$(5))))
+	( test -f $$($(1)_source_dir)/$(4) || \
+	( $(call fetch_file_inner,$(1),$(2),$(3),$(4),$(5)) || \
+	  $(call fetch_file_inner,$(1),$(FALLBACK_DOWNLOAD_PATH),$(4),$(4),$(5))))
 endef
 
 define int_get_build_recipe_hash
@@ -234,8 +234,8 @@ stages = fetched extracted preprocessed configured built staged postprocessed ca
 
 define ext_add_stages
 $(foreach stage,$(stages),
-          $(1)_$(stage): $($(1)_$(stage))
-          .PHONY: $(1)_$(stage))
+	      $(1)_$(stage): $($(1)_$(stage))
+	      .PHONY: $(1)_$(stage))
 endef
 
 # These functions create the build targets for each package. They must be
